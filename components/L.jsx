@@ -1,17 +1,11 @@
-// Bilingual text. Both languages are rendered; CSS shows the active one (html[data-lang]).
-export function L({ en, ko }) {
-  if (!ko) return <>{en}</>;
-  return (
-    <>
-      <span className="en-only">{en}</span>
-      <span className="ko-only">{ko}</span>
-    </>
-  );
+// Text helpers. The site is English-only; any "ko" fields in the data files are ignored.
+export function L({ en }) {
+  return <>{en}</>;
 }
 
 // Convenience for { en, ko } objects from YAML
 export function T({ v }) {
   if (!v) return null;
   if (typeof v === "string") return <>{v}</>;
-  return <L en={v.en} ko={v.ko} />;
+  return <>{v.en}</>;
 }

@@ -1,6 +1,16 @@
-# News cards on Home. Newest first. Placeholder entries.
-- date: "2026-10-31"
+# News items. Newest first. Shown on the Home page (latest 4) and on /news (all).
+# Fields: date (YYYY-MM-DD), title, summary (optional), tag (optional: Paper, Award, Talk, Lab, Funding ...), link (optional)
+#
+# Template:
+# - date: "2026-12-01"
+#   tag: Paper
+#   title: One-line headline
+#   summary: One or two sentences with the key point.
+#   link: https://doi.org/...
+- date: "2026-11-01"
+  tag: Lab
   title:
-    en: Lab website under construction
-    ko: 랩 홈페이지 준비 중
+    en: ALADDIN Lab website is live
+  summary:
+    en: Research, publications and team pages are now online. Publications update automatically from ORCID.
   link: ""

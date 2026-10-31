@@ -8,13 +8,23 @@ export default function Home() {
   const research = getResearch();
   const selected = getPublications().filter((p) => p.selected).slice(0, 4);
   const team = getTeam().filter((m) => m.group === "pi" || m.group === "member");
-  const news = getNews().slice(0, 3);
+  const news = getNews().slice(0, 4);
+  const recent = getPublications().slice(0, 4);
 
   return (
     <>
       {/* Hero */}
       <section className="hero">
         <MoleculeField />
+        <img
+          className="hero-structure"
+          src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/images/hero-structure.webp`}
+          alt=""
+          aria-hidden="true"
+          width="1032"
+          height="1600"
+          fetchPriority="high"
+        />
         <div className="container hero-inner">
           <p className="eyebrow">{site.name}</p>
           <h1 className="display"><T v={site.tagline} /></h1>
@@ -22,6 +32,50 @@ export default function Home() {
           <div className="hero-cta">
             <Link className="btn btn-primary" href="/research/"><L en="Our research" ko="연구 소개" /></Link>
             <Link className="btn btn-ghost" href="/publications/"><L en="Publications" ko="논문" /></Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Latest: recent publications + news */}
+      <section className="section latest">
+        <div className="container latest-grid">
+          <div>
+            <div className="latest-head">
+              <h2 className="eyebrow">Recent publications</h2>
+              <Link className="more-link" href="/publications/">All publications →</Link>
+            </div>
+            {recent.length === 0 ? (
+              <p className="muted">Publications appear here after the ORCID sync runs.</p>
+            ) : (
+              <div className="pub-list">
+                {recent.map((p) => (
+                  <article key={p.doi || p.title} className="pub-entry">
+                    <div className="pub-venue">{p.journal} · {p.year}</div>
+                    <h3 className="pub-title">
+                      {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.title}</a> : p.title}
+                    </h3>
+                    <p className="pub-authors">{p.authors}</p>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+          <div>
+            <div className="latest-head">
+              <h2 className="eyebrow">News</h2>
+              <Link className="more-link" href="/news/">All news →</Link>
+            </div>
+            <ul className="news-cards compact">
+              {news.map((n, i) => (
+                <li key={i} className="news-card">
+                  <div className="news-meta">
+                    <time dateTime={n.date}>{n.date}</time>
+                    {n.tag && <span className="chip-tag">{n.tag}</span>}
+                  </div>
+                  <h3 className="news-title">{n.link ? <a href={n.link} target="_blank" rel="noreferrer"><T v={n.title} /></a> : <T v={n.title} />}</h3>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
@@ -99,28 +153,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* News + Locations */}
-      <section className="section section-alt">
-        <div className="container two-col">
-          <div>
-            <p className="eyebrow"><L en="News" ko="소식" /></p>
-            <ul className="news">
-              {news.map((n, i) => (
-                <li key={i}>
-                  <time>{n.date}</time>
-                  <span>{n.link ? <a href={n.link}><T v={n.title} /></a> : <T v={n.title} />}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="eyebrow"><L en="Affiliations" ko="소속" /></p>
-            <ul className="plain">
-              {site.affiliations.map((a, i) => (<li key={i}><T v={a} /></li>))}
-            </ul>
-          </div>
-        </div>
-      </section>
     </>
   );
 }

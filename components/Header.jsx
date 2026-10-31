@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { L } from "./L";
-import LangToggle from "./LangToggle";
 
 const nav = [
   { href: "/research/", en: "Research", ko: "연구" },
   { href: "/publications/", en: "Publications", ko: "논문" },
+  { href: "/news/", en: "News", ko: "소식" },
   { href: "/team/", en: "Team", ko: "구성원" },
   { href: "/join/", en: "Join", ko: "합류" },
 ];
@@ -28,7 +28,6 @@ export default function Header({ name }) {
           ))}
         </nav>
         <div className="header-side">
-          <LangToggle />
           <Link className="btn btn-soft btn-sm" href="/contact/"><L en="Contact" ko="연락처" /></Link>
         </div>
       </div>

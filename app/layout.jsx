@@ -14,14 +14,10 @@ export const metadata = {
 
 export const viewport = { themeColor: "#ffffff", width: "device-width", initialScale: 1 };
 
-// Picks the language before first paint: saved choice, otherwise browser language.
-const langScript = `(function(){try{var s=localStorage.getItem('lang');var l=s||((navigator.languages&&navigator.languages[0]||navigator.language||'en').toLowerCase().indexOf('ko')===0?'ko':'en');document.documentElement.dataset.lang=l;document.documentElement.lang=l;}catch(e){document.documentElement.dataset.lang='en';}})();`;
-
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
-        <script dangerouslySetInnerHTML={{ __html: langScript }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
