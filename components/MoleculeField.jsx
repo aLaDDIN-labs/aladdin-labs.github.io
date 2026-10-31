@@ -1,6 +1,6 @@
-// Decorative hero background: a deterministic molecular-network field.
-// Placeholder for rendered structure images (PyMOL/ChimeraX): drop /public/images/hero.webp
-// and set it in app/page.jsx to replace or layer over this.
+// Decorative hero background (light theme): a molecular-network field with soft out-of-focus blobs.
+// Placeholder for rendered structure images (PyMOL/ChimeraX): add /public/images/hero.webp
+// and place it in app/page.jsx to replace or layer over this.
 function rng(seed) {
   let a = seed;
   return () => {
@@ -11,15 +11,18 @@ function rng(seed) {
   };
 }
 
+const ORANGE = "#F39800";
+const GRAY = "#363532";
+
 export default function MoleculeField() {
   const r = rng(20261031);
   const W = 900, H = 700;
-  const nodes = Array.from({ length: 46 }, () => ({
+  const nodes = Array.from({ length: 44 }, () => ({
     x: 120 + r() * (W - 160),
     y: 40 + r() * (H - 80),
-    r: 2 + r() * 7,
-    o: 0.25 + r() * 0.65,
-    hue: r() > 0.72 ? 1 : 0,
+    r: 2.5 + r() * 8,
+    o: 0.3 + r() * 0.6,
+    gray: r() > 0.78,
   }));
   const edges = [];
   for (let i = 0; i < nodes.length; i++) {
@@ -28,31 +31,39 @@ export default function MoleculeField() {
       if (d < 150) edges.push([i, j, d]);
     }
   }
+  const blobs = [
+    { x: 650, y: 150, r: 70, c: ORANGE, o: 0.22 },
+    { x: 780, y: 520, r: 90, c: ORANGE, o: 0.16 },
+    { x: 430, y: 560, r: 55, c: GRAY, o: 0.10 },
+    { x: 560, y: 60, r: 40, c: GRAY, o: 0.08 },
+  ];
   return (
     <svg className="molecule" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" preserveAspectRatio="xMaxYMid slice">
       <defs>
-        <radialGradient id="glow" cx="62%" cy="48%" r="60%">
-          <stop offset="0%" stopColor="#4fe3c1" stopOpacity="0.22" />
-          <stop offset="55%" stopColor="#4f8cff" stopOpacity="0.10" />
-          <stop offset="100%" stopColor="#000" stopOpacity="0" />
+        <radialGradient id="glow" cx="66%" cy="46%" r="55%">
+          <stop offset="0%" stopColor={ORANGE} stopOpacity="0.16" />
+          <stop offset="60%" stopColor={ORANGE} stopOpacity="0.04" />
+          <stop offset="100%" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
-        <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#7cf3d1" />
-          <stop offset="100%" stopColor="#6aa8ff" />
-        </linearGradient>
+        <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="18" />
+        </filter>
       </defs>
       <rect width={W} height={H} fill="url(#glow)" />
+      {blobs.map((b, k) => (
+        <circle key={k} cx={b.x} cy={b.y} r={b.r} fill={b.c} opacity={b.o} filter="url(#soft)" />
+      ))}
       {edges.map(([i, j, d], k) => (
         <line
           key={k}
           x1={nodes[i].x} y1={nodes[i].y} x2={nodes[j].x} y2={nodes[j].y}
-          stroke="url(#edge)" strokeWidth="1" strokeOpacity={0.5 * (1 - d / 150)}
+          stroke={GRAY} strokeWidth="1" strokeOpacity={0.22 * (1 - d / 150)}
         />
       ))}
       {nodes.map((n, k) => (
         <g key={k}>
-          <circle cx={n.x} cy={n.y} r={n.r * 2.6} fill={n.hue ? "#6aa8ff" : "#7cf3d1"} opacity={n.o * 0.10} />
-          <circle cx={n.x} cy={n.y} r={n.r} fill={n.hue ? "#6aa8ff" : "#7cf3d1"} opacity={n.o} />
+          <circle cx={n.x} cy={n.y} r={n.r * 2.4} fill={n.gray ? GRAY : ORANGE} opacity={n.o * 0.08} />
+          <circle cx={n.x} cy={n.y} r={n.r} fill={n.gray ? GRAY : ORANGE} opacity={n.o * (n.gray ? 0.55 : 0.85)} />
         </g>
       ))}
     </svg>

@@ -17,11 +17,10 @@ export default function Header({ name }) {
         <Link href="/" className="brand" aria-label={name}>
           <img
             className="brand-logo"
-            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/images/brand/logo-mark.png`}
-            alt=""
-            height="38"
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/images/brand/logo.png`}
+            alt={name}
+            height="64"
           />
-          <span>{name.toUpperCase()}</span>
         </Link>
         <nav className="nav" aria-label="Primary">
           {nav.map((n) => (
@@ -30,7 +29,7 @@ export default function Header({ name }) {
         </nav>
         <div className="header-side">
           <LangToggle />
-          <Link className="btn btn-ghost btn-sm" href="/contact/"><L en="Contact" ko="연락처" /></Link>
+          <Link className="btn btn-soft btn-sm" href="/contact/"><L en="Contact" ko="연락처" /></Link>
         </div>
       </div>
     </header>

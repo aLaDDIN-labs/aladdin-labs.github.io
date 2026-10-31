@@ -8,9 +8,9 @@ export default function Footer({ site }) {
         <div>
           <img
             className="footer-logo"
-            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/images/brand/logo-full.png`}
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/images/brand/logo.png`}
             alt={site.name}
-            width="132"
+            width="112"
           />
           <p className="footer-tag"><T v={site.full_name} /></p>
           {site.affiliations.map((a, i) => (
