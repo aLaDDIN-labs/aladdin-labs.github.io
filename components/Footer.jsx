@@ -6,6 +6,12 @@ export default function Footer({ site }) {
     <footer className="site-footer">
       <div className="container footer-grid">
         <div>
+          <img
+            className="footer-logo"
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/images/brand/logo-full.png`}
+            alt={site.name}
+            width="132"
+          />
           <p className="footer-tag"><T v={site.full_name} /></p>
           {site.affiliations.map((a, i) => (
             <p key={i} className="muted small"><T v={a} /></p>

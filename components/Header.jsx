@@ -15,7 +15,12 @@ export default function Header({ name }) {
       <a className="skip" href="#main">Skip to content</a>
       <div className="container header-row">
         <Link href="/" className="brand" aria-label={name}>
-          <span className="brand-mark" aria-hidden="true" />
+          <img
+            className="brand-logo"
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/images/brand/logo-mark.png`}
+            alt=""
+            height="38"
+          />
           <span>{name.toUpperCase()}</span>
         </Link>
         <nav className="nav" aria-label="Primary">

@@ -41,7 +41,8 @@ html[data-lang="ko"] .en-only { display: none; }
 }
 .header-row { display: flex; align-items: center; gap: 28px; height: 68px; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.14em; font-size: 0.95rem; }
-.brand-mark { width: 14px; height: 14px; border-radius: 50%; background: var(--grad); box-shadow: 0 0 18px rgba(124, 243, 209, 0.6); }
+.brand-logo { height: 38px; width: auto; display: block; }
+.footer-logo { display: block; width: 132px; height: auto; margin-bottom: 16px; }
 .nav { display: flex; gap: 26px; margin-left: 12px; flex: 1; }
 .nav a { color: var(--muted); font-size: 0.95rem; transition: color 0.2s; }
 .nav a:hover { color: var(--ink); }
@@ -67,7 +68,7 @@ html[data-lang="ko"] .en-only { display: none; }
 
 /* type */
 .eyebrow { text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.75rem; color: var(--a1); margin: 0 0 14px; font-weight: 600; }
-.display { font-size: clamp(2.3rem, 5.4vw, 4.4rem); line-height: 1.08; letter-spacing: -0.03em; margin: 0 0 24px; font-weight: 700; max-width: 16ch; }
+.display { font-size: clamp(2.3rem, 5.4vw, 4.4rem); line-height: 1.08; letter-spacing: -0.03em; margin: 0 0 24px; font-weight: 700; max-width: 18ch; }
 .h1 { font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: -0.025em; margin: 0; line-height: 1.1; }
 .h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); letter-spacing: -0.02em; margin: 0 0 16px; line-height: 1.15; }
 .h3 { font-size: 1.2rem; margin: 0 0 8px; letter-spacing: -0.01em; }

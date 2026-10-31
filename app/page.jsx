@@ -16,7 +16,7 @@ export default function Home() {
       <section className="hero">
         <MoleculeField />
         <div className="container hero-inner">
-          <p className="eyebrow"><T v={site.full_name} /></p>
+          <p className="eyebrow">{site.name}</p>
           <h1 className="display"><T v={site.tagline} /></h1>
           <p className="lede"><T v={site.intro} /></p>
           <div className="hero-cta">
