@@ -1,0 +1,60 @@
+# Site-wide settings. Edit freely; the site rebuilds from this file.
+name: ALADDIN Lab
+full_name:
+  en: A Lab for Drug Discovery in Neurological Disorders
+  ko: 신경질환 신약개발 연구실
+tagline:
+  en: Drug discovery for neurological disorders, from protein structure to neural circuits
+  ko: 단백질 구조에서 신경회로까지, 신경질환 신약개발
+intro:
+  en: We combine structural biology, biophysics and computational design with cell and circuit models to develop targeted protein degraders and circuit-modulating therapeutics.
+  ko: 구조생물학, 생물물리, 계산 설계와 세포·회로 모델을 결합해 표적 단백질 분해제와 신경회로 조절 치료제를 개발합니다.
+
+affiliations:
+  - en: Korea Research Institute of Chemical Technology (KRICT)
+    ko: 한국화학연구원
+  - en: University of Science and Technology (UST)
+    ko: 과학기술연합대학원대학교
+  - en: Sungkyunkwan University School of Pharmacy
+    ko: 성균관대학교 약학대학
+
+contact:
+  email: "TODO@example.org"
+  address:
+    en: KRICT, Daejeon, Republic of Korea
+    ko: 한국화학연구원, 대전
+  github: ""
+  orcid: "0000-0002-6036-8996"
+
+# Topic tags shown as filter chips on Publications.
+# `keywords` is a regex matched against title + journal; it labels papers automatically.
+# Add `tags: [id, ...]` for a paper in data/publication-meta.yaml to set tags explicitly.
+topics:
+  - id: degrader
+    en: Degrader
+    ko: 분해제
+    keywords: "degrader|protac|molecular glue|ubiquitin|e3 ligase|cereblon|crbn|proteasom|autophagy|attec"
+  - id: structure
+    en: Structural biology
+    ko: 구조생물학
+    keywords: "crystal|cryo-?em|structur|x-ray|nmr|ternary complex"
+  - id: neuro
+    en: Neuro circuit
+    ko: 신경회로
+    keywords: "synap|neuron|circuit|brain|cortex|hippocamp|cerebell|shank|psd-?95|neurogenesis"
+  - id: gpcr
+    en: GPCR
+    ko: GPCR
+    keywords: "gpcr|g protein-coupled|5-?ht|serotonin|dopamine|receptor agonist"
+  - id: alzheimer
+    en: Alzheimer
+    ko: 알츠하이머
+    keywords: "alzheimer|amyloid|\\btau\\b"
+  - id: computational
+    en: Computational
+    ko: 계산
+    keywords: "machine learning|deep learning|docking|molecular dynamics|virtual screening|alphafold|computational|in silico"
+  - id: review
+    en: Review
+    ko: 리뷰
+    keywords: "\\breview\\b|\\bperspective\\b|opinion in"

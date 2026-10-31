@@ -1,0 +1,11 @@
+# Per-paper annotations, keyed by DOI (lowercase). ORCID cannot supply these.
+#   tags:     topic ids from data/site.yaml (adds to automatic keyword tagging)
+#   selected: true to show under "Selected" and on the Home page
+#   figure:   optional image path (public/images/pubs/...)
+#   hidden:   true to hide a record
+#
+# Example:
+# "10.1038/s41467-025-00000-0":
+#   tags: [degrader, structure]
+#   selected: true
+{}

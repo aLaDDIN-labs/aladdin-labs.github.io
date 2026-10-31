@@ -1,0 +1,9 @@
+# Papers without a DOI, or ones ORCID does not list. Same shape as publications.json items.
+# - title: "Example title"
+#   authors: "Kim D, Lee J"
+#   journal: "Journal Name"
+#   year: 2026
+#   type: journal      # journal | preprint | conference | review
+#   url: "https://..."
+#   doi: ""
+[]

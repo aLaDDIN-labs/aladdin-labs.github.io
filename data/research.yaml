@@ -1,0 +1,40 @@
+# Research page. Each area = one section with a short description, Key papers (by DOI)
+# and an optional figure (put the image in public/images/research/).
+# Placeholder text: replace with the lab's own wording.
+areas:
+  - id: degraders
+    title:
+      en: Targeted Protein Degraders
+      ko: 표적 단백질 분해제
+    summary:
+      en: Structure-guided discovery of molecular glues and heterobifunctional degraders. Ternary complex structures, biophysical validation and computational pipelines are combined to explain selectivity and guide chemistry.
+      ko: 구조 기반으로 분자접착제와 이중기능 분해제를 발굴합니다. 삼원 복합체 구조, 생물물리 검증, 계산 파이프라인을 결합해 선택성을 설명하고 화학 설계를 이끕니다.
+    key_papers: []          # e.g. ["10.1038/s41467-0xx-xxxxx-x"]
+    figure: ""              # e.g. "/images/research/degrader.webp"
+    figure_caption:
+      en: ""
+      ko: ""
+  - id: circuits
+    title:
+      en: Neuro Circuit Modulation
+      ko: 신경회로 조절
+    summary:
+      en: Receptor- and synapse-level modulation of neural circuits. Signaling-biased ligands for GPCRs and phosphorylation-dependent organization of the postsynaptic density are studied from structure to cell and animal models.
+      ko: 수용체와 시냅스 수준에서 신경회로를 조절합니다. GPCR의 신호 편향 리간드와 시냅스후 치밀질의 인산화 의존적 조직화를 구조에서 세포·동물 모델까지 연구합니다.
+    key_papers: []
+    figure: ""
+    figure_caption:
+      en: ""
+      ko: ""
+  - id: platform
+    title:
+      en: Computational and Biophysical Platform
+      ko: 계산 및 생물물리 플랫폼
+    summary:
+      en: Automated computational pipelines for screening, molecular dynamics and scoring, paired with in-house biophysical assays for rapid validation of hits.
+      ko: 스크리닝, 분자동역학, 스코어링을 위한 자동화 계산 파이프라인과 자체 생물물리 분석을 결합해 히트를 빠르게 검증합니다.
+    key_papers: []
+    figure: ""
+    figure_caption:
+      en: ""
+      ko: ""

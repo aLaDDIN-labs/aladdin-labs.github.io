@@ -1,0 +1,17 @@
+{
+  "name": "aladdin-lab-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "sync:orcid": "node scripts/sync-orcid.mjs",
+    "start": "npx serve out"
+  },
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "yaml": "^2.6.0"
+  }
+}
