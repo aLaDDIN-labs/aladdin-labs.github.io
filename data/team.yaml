@@ -1,31 +1,37 @@
-# Team page. `group`: pi | current | alumni. Photos go in public/images/team/.
-# TODO: confirm English name spelling, add photo and bio.
-- id: pi
+# Members page. group: pi | current | alumni | collaborator
+# Photos: public/images/team/<id>.webp (square, ~800px). English only.
+# Add people by copying the example at the bottom.
+- id: doyoun-kim
   group: pi
   name:
-    en: Doyoun Kim
-    ko: 김도연
+    en: Doyoun Kim, PhD
   role:
     en: Principal Investigator
-    ko: 연구책임자
   position:
-    en: Senior Researcher, KRICT · Associate Professor, UST · Adjunct Professor, SKKU School of Pharmacy
-    ko: 한국화학연구원 선임연구원 · UST 부교수 · 성균관대 약학대학 학연교수
-  bio:
-    en: Structural biologist working on drug discovery for neurological disorders. PhD in structural biology, followed by postdoctoral work in synaptic neuroscience.
-    ko: 신경질환 신약개발을 연구하는 구조생물학자입니다. 구조생물학으로 박사학위를 받고 시냅스 신경과학 분야에서 박사후 연구를 수행했습니다.
-  photo: ""
+    en: Senior Scientist, KRICT · Associate Professor, UST · Adjunct Professor, SKKU School of Pharmacy
+  photo: /images/team/doyoun-kim.webp
+  education:
+    - { years: "2007–2013", text: "PhD, School of Medicine, Sungkyunkwan University (Structural Biology)" }
+    - { years: "2005–2007", text: "MS, School of Medicine, Sungkyunkwan University (Structural Biology)" }
+    - { years: "2000–2005", text: "BS, Sungkyunkwan University" }
+  career:
+    - { years: "2024–Present", text: "Adjunct Professor, School of Pharmacy, Sungkyunkwan University" }
+    - { years: "2022–Present", text: "Associate Professor, University of Science and Technology (UST)" }
+    - { years: "2018–Present", text: "Senior Scientist, Korea Research Institute of Chemical Technology (KRICT)" }
+    - { years: "2013–2018", text: "Researcher, Center for Synapse and Brain Dysfunction, Institute for Basic Science (IBS); autism spectrum disorder" }
   links:
+    linkedin: "https://www.linkedin.com/in/doyoun-kim-ba0a90a0/"
+    facebook: "https://www.facebook.com/doyoun.kim.16"
     orcid: "https://orcid.org/0000-0002-6036-8996"
-  tags: [PI]
 
-# Example member (delete or edit)
+# Example member (copy, uncomment, edit)
 # - id: member-1
-#   group: current
-#   name: { en: "Name", ko: "이름" }
-#   role: { en: "PhD student", ko: "박사과정" }
-#   position: { en: "", ko: "" }
-#   bio: { en: "", ko: "" }
-#   photo: "/images/team/member-1.webp"
-#   links: { email: "", scholar: "" }
-#   tags: [Degrader]
+#   group: current        # current | alumni | collaborator
+#   name: { en: "Name" }
+#   role: { en: "PhD student" }
+#   position: { en: "UST / KRICT" }
+#   photo: /images/team/member-1.webp
+#   bio: { en: "Short introduction." }
+#   education: [ { years: "2020–2024", text: "MS, University" } ]
+#   career: []
+#   links: { email: "", linkedin: "", orcid: "" }
