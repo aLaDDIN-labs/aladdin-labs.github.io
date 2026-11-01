@@ -76,7 +76,7 @@ export default function PublicationList({ pubs, topics, piName }) {
             <h2 className="pub-year-label">{year || "-"}</h2>
             <div className="pub-list">
               {list.map((p) => (
-                <article key={`${p.doi}${p.title}`} className="pub-entry">
+                <article key={`${p.doi}${p.title}`} className="pub-entry numbered">
                   <span className="pub-no" aria-label={`Publication ${p.no}`}>{p.no}</span>
                   <div className="pub-body-col">
                   <div className="pub-venue">

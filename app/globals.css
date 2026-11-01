@@ -238,7 +238,8 @@ html[data-lang="ko"] .en-only { display: none; }
 
 @media (max-width: 860px) { .site-header { backdrop-filter: none; background: #fff; } }
 
-.pub-entry { display: grid; grid-template-columns: 44px 1fr; gap: 12px; }
+.pub-entry.numbered { display: grid; grid-template-columns: 44px 1fr; gap: 12px; }
 .pub-no { font-size: 0.85rem; font-weight: 600; color: var(--orange-ink); font-variant-numeric: tabular-nums; padding-top: 2px; text-align: right; }
-@media (max-width: 860px) { .pub-entry { grid-template-columns: 34px 1fr; gap: 8px; } }
+@media (max-width: 860px) { .pub-entry.numbered { grid-template-columns: 34px 1fr; gap: 8px; } }
 .pi-mark{font-weight:700;color:var(--orange-ink)} .pub-note{margin:0 0 4px;font-size:.85rem;color:var(--muted);padding-top:16px}
+.pi-self{font-weight:700;color:var(--ink)}
