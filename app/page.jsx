@@ -57,11 +57,6 @@ export default function Home() {
                       {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.title}</a> : p.title}
                     </h3>
                     <p className="pub-authors"><Authors text={p.authors} mark={p.mark} piName={site.pi_name} /></p>
-                  <div className="pub-meta">
-                    {p.topics.map((id) => topicMap[id] && (
-                      <span key={id} className="tag tag-abbr" title={topicMap[id].en}>{topicMap[id].abbr}</span>
-                    ))}
-                  </div>
                     <div className="pub-meta">
                       {p.topics.map((id) => topicMap[id] && (
                         <span key={id} className="tag tag-abbr" title={topicMap[id].en}>{topicMap[id].abbr}</span>
