@@ -8,8 +8,9 @@ export default function Team() {
   const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
   return (
     <>
-      <header className="team-hero" style={{ backgroundImage: `url(${base}/images/members-art.webp)` }}>
-        <div className="container">
+      <header className="team-banner">
+        <img src={`${base}/images/members-banner.webp`} alt="Illustration of ALADDIN lab members at work" />
+        <div className="team-overlay">
           <p className="eyebrow">Members</p>
           <h1 className="team-title"><span className="light">The people of</span> <span className="aw"><i>a</i>L<i>a</i>DDIN</span></h1>
         </div>

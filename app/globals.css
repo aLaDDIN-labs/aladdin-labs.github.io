@@ -369,3 +369,41 @@ html[data-lang="ko"] .en-only { display: none; }
 .team-title .light { font-weight: 300; }
 .aw i { font-style: normal; color: var(--orange); }
 .aw { font-weight: 800; letter-spacing: -0.03em; white-space: nowrap; }
+
+.team-hero { background: #fbfaf7; background-image: none !important; padding: 0 !important; border-bottom: 1px solid var(--line); overflow: hidden; }
+.team-hero::before { display: none !important; }
+.mart { max-width: 1500px; margin: 0 auto; padding: 18px 12px 6px; }
+.mart svg { display: block; width: 100%; height: auto; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 760px) {
+  .mart { padding: 10px 0 0; overflow: hidden; height: 205px; position: relative; }
+  .mart svg { position: absolute; left: 50%; top: 10px; height: 190px; width: auto; transform: translateX(-47%); max-width: none; }
+}
+
+/* Members: title above, illustration banner below */
+.team-head { padding: clamp(56px, 8vw, 100px) 0 clamp(20px, 3vw, 36px); }
+.team-head .eyebrow { margin-bottom: 14px; }
+.team-banner { margin: 0; background: #f6f5f2; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
+.team-banner img { display: block; width: 100%; height: auto; max-width: 1800px; margin: 0 auto; }
+@media (max-width: 760px) {
+  .team-banner img { height: 220px; width: auto; max-width: none; position: relative; left: 50%; transform: translateX(-50%); }
+}
+
+/* Members: title overlaid on the illustration */
+.team-banner { position: relative; }
+.team-banner img { max-width: none; }
+.team-overlay { position: absolute; left: 56%; top: 4%; transform: translateX(-50%); text-align: center; padding: 18px 56px 22px; background: radial-gradient(ellipse at center, rgba(250,249,246,.96) 0%, rgba(250,249,246,.9) 45%, rgba(250,249,246,0) 74%); }
+.team-overlay .eyebrow { margin: 0 0 6px; }
+.team-overlay .team-title { font-size: clamp(1.9rem, 3.6vw, 3.4rem); white-space: nowrap; }
+@media (max-width: 760px) {
+  .team-banner img { height: 300px; width: auto; left: 50%; transform: translateX(-62%); position: relative; }
+  .team-banner { height: 300px; overflow: hidden; }
+  .team-overlay { left: 50%; top: 6px; padding: 12px 36px 18px; }
+  .team-overlay .team-title { font-size: 1.9rem; white-space: normal; line-height: 1.05; }
+}
+
+@media (min-width: 761px) {
+  .team-banner { padding-top: 70px; background: #f6f5f2; }
+  .team-overlay { left: 50%; top: 10px; padding: 8px 60px 30px; background: radial-gradient(ellipse at center 40%, rgba(246,245,242,1) 0%, rgba(246,245,242,.95) 50%, rgba(246,245,242,0) 76%); }
+  .team-overlay .eyebrow { margin-bottom: 2px; }
+}
