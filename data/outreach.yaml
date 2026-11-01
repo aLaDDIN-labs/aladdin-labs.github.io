@@ -1,0 +1,23 @@
+# Outreach gallery. Each entry is an ALBUM: one cover photo is shown on the page,
+# and clicking it opens a viewer with all photos of the album. Newest first (by date).
+#
+# 1) Put photos in public/images/outreach/  (JPG/WebP, long side ~1600px is plenty)
+# 2) Copy a template below, remove the leading #, and delete the `[]` line at the bottom.
+#
+# Album with several photos:
+# - title: Open lab day at KRICT
+#   date: "2026-10-20"
+#   tag: Open lab                 # optional; becomes a filter button
+#   caption: Students tried pipetting and protein modelling.   # optional
+#   cover: /images/outreach/open-lab-1.jpg   # optional; defaults to the first photo
+#   photos:
+#     - /images/outreach/open-lab-1.jpg
+#     - /images/outreach/open-lab-2.jpg
+#     - image: /images/outreach/open-lab-3.jpg      # a photo can have its own caption
+#       caption: Pipetting practice
+#
+# Single photo (works too):
+# - image: /images/outreach/seminar.jpg
+#   title: Invited seminar
+#   date: "2026-09-02"
+[]

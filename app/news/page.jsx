@@ -1,3 +1,4 @@
+import PageBanner from "../../components/PageBanner";
 import { T } from "../../components/L";
 import { getNews } from "../../lib/data";
 
@@ -11,12 +12,7 @@ export default function News() {
   const years = [...new Set(news.map((n) => String(n.date).slice(0, 4)))];
   return (
     <>
-      <header className="page-head">
-        <div className="container">
-          <p className="eyebrow">News</p>
-          <h1 className="h1">News</h1>
-        </div>
-      </header>
+      <PageBanner src="/images/banners/news.webp" alt="Illustration of lab news and media" eyebrow="News" light="The latest from" wordmark focus="-50%" />
       <div className="container news-page">
         {years.map((y) => (
           <section key={y} className="news-year">

@@ -1,3 +1,4 @@
+import PageBanner from "../../components/PageBanner";
 import PublicationList from "../../components/PublicationList";
 import { L } from "../../components/L";
 import { getPublications, getPatents, getSite } from "../../lib/data";
@@ -10,12 +11,7 @@ export default function Publications() {
   const { topics, pi_name } = getSite();
   return (
     <>
-      <header className="page-head">
-        <div className="container">
-          <p className="eyebrow"><L en="Publications" ko="논문" /></p>
-          <h1 className="h1"><L en="Publications" ko="논문" /></h1>
-        </div>
-      </header>
+      <PageBanner src="/images/banners/publications.webp" alt="Illustration of reading and writing papers" eyebrow="Publications" light="Research from" wordmark focus="-50%" />
       {pubs.length === 0 && patents.length === 0 ? (
         <div className="container pub-body">
           <p className="muted">
