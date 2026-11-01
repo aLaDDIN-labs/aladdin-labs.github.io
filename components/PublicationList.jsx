@@ -4,11 +4,10 @@ import Authors from "./Authors";
 
 // Categories, each numbered on its own (newest = largest number).
 const CATS = [
-  { id: "papers", label: "Papers", match: (p) => !["preprint", "chapter"].includes(p.type) },
+  { id: "papers", label: "Papers & Book chapters", match: (p) => p.type !== "preprint" },
   { id: "preprints", label: "Preprints", match: (p) => p.type === "preprint" },
-  { id: "chapters", label: "Book chapters", match: (p) => p.type === "chapter" },
 ];
-const TYPE_LABEL = { conference: "conference", review: "review" };
+const TYPE_LABEL = { conference: "conference", review: "review", chapter: "book chapter" };
 
 export default function PublicationList({ pubs, topics, piName, patents = [] }) {
   const [cat, setCat] = useState("papers");
@@ -33,8 +32,9 @@ export default function PublicationList({ pubs, topics, piName, patents = [] }) 
   }, [patents]);
 
   const tabs = [
-    ...CATS.filter((c) => c.id === "papers" || byCat[c.id].length > 0).map((c) => ({ id: c.id, label: c.label, n: byCat[c.id].length })),
+    { id: "papers", label: CATS[0].label, n: byCat.papers.length },
     ...(sortedPatents.length ? [{ id: "patents", label: "Patents", n: sortedPatents.length }] : []),
+    ...(byCat.preprints.length ? [{ id: "preprints", label: "Preprints", n: byCat.preprints.length }] : []),
   ];
 
   const current = cat === "patents" ? [] : byCat[cat] ?? [];
@@ -48,7 +48,8 @@ export default function PublicationList({ pubs, topics, piName, patents = [] }) 
     const needle = q.trim().toLowerCase();
     return current.filter((p) => {
       if (filter === "Selected" && !p.selected) return false;
-      if (filter !== "All" && filter !== "Selected" && !p.topics.includes(filter)) return false;
+      if (filter === "chapter") { if (p.type !== "chapter") return false; }
+      else if (filter !== "All" && filter !== "Selected" && !p.topics.includes(filter)) return false;
       if (needle && !`${p.title} ${p.authors} ${p.journal} ${p.year}`.toLowerCase().includes(needle)) return false;
       return true;
     });
@@ -64,6 +65,7 @@ export default function PublicationList({ pubs, topics, piName, patents = [] }) 
     { id: "All", label: "All" },
     ...(cat === "papers" ? [{ id: "Selected", label: "Selected" }] : []),
     ...used.map((t) => ({ id: t.id, label: t.abbr, title: t.en })),
+    ...(cat === "papers" && current.some((p) => p.type === "chapter") ? [{ id: "chapter", label: "Book chapter" }] : []),
   ];
 
   const switchCat = (id) => { setCat(id); setFilter("All"); setQ(""); };

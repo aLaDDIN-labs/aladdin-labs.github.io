@@ -59,6 +59,8 @@ topics:
 # By journal (applied to every paper in that journal); override per paper in publication-meta.yaml (mark: "#").
 pi_name: "Doyoun Kim|Do-?youn Kim|Kim D(Y)?(?![A-Za-z])"
 author_marks:
+  # rules may combine journal / title / year (all given conditions must match); first match wins
+  - { title: "arid1b", year: 2022, journal: "^nature communications", mark: "#" }
   - { journal: "^results in chemistry", mark: "*" }
   - { journal: "^frontiers in bioengineering", mark: "*" }
   - { journal: "^frontiers in microbiology", mark: "*" }

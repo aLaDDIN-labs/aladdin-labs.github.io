@@ -7,10 +7,10 @@ import { getSite, getResearch, getPublications, getTeam, getNews } from "../lib/
 export default function Home() {
   const site = getSite();
   const research = getResearch();
-  const selected = getPublications().filter((p) => p.selected && p.type !== "preprint" && p.type !== "chapter").slice(0, 4);
+  const selected = getPublications().filter((p) => p.selected && p.type !== "preprint").slice(0, 4);
   const team = getTeam().filter((m) => m.group === "pi" || m.group === "current" || m.group === "member");
   const news = getNews().slice(0, 4);
-  const recent = getPublications().filter((p) => p.type !== "preprint" && p.type !== "chapter").slice(0, 4);
+  const recent = getPublications().filter((p) => p.type !== "preprint").slice(0, 4);
   const topicMap = Object.fromEntries(site.topics.map((t) => [t.id, t]));
 
   return (
