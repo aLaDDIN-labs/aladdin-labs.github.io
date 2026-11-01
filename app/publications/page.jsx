@@ -1,11 +1,12 @@
 import PublicationList from "../../components/PublicationList";
 import { L } from "../../components/L";
-import { getPublications, getSite } from "../../lib/data";
+import { getPublications, getPatents, getSite } from "../../lib/data";
 
 export const metadata = { title: "Publications" };
 
 export default function Publications() {
   const pubs = getPublications();
+  const patents = getPatents();
   const { topics, pi_name } = getSite();
   return (
     <>
@@ -15,7 +16,7 @@ export default function Publications() {
           <h1 className="h1"><L en="Publications" ko="논문" /></h1>
         </div>
       </header>
-      {pubs.length === 0 ? (
+      {pubs.length === 0 && patents.length === 0 ? (
         <div className="container pub-body">
           <p className="muted">
             <L
@@ -25,7 +26,7 @@ export default function Publications() {
           </p>
         </div>
       ) : (
-        <PublicationList pubs={pubs} topics={topics} piName={pi_name} />
+        <PublicationList pubs={pubs} topics={topics} piName={pi_name} patents={patents} />
       )}
     </>
   );

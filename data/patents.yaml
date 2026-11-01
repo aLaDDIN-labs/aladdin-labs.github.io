@@ -1,0 +1,9 @@
+# Patents. Newest first is automatic (by year). Add one entry per patent.
+# - title: "Patent title"
+#   inventors: "Kim D, Lee J"
+#   number: "KR 10-2025-0000000"     # application / registration number
+#   country: "KR"                     # KR | US | PCT | EP ...
+#   status: "Registered"              # Filed | Registered | Published ...
+#   year: 2025
+#   url: ""                           # optional link
+[]

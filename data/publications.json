@@ -1,5 +1,23 @@
 [
   {
+    "title": "Development of MKI-3: A Potent and Selective MASTL Inhibitor with Improved Efficacy for Cancer Treatment",
+    "authors": "Kim JI, Kim YH, Pandit N, Lee KM, Chae CH, Kim D, Kim JS, Jung KY",
+    "journal": "Journal of Medicinal Chemistry",
+    "year": 2026,
+    "type": "journal",
+    "doi": "10.1021/acs.jmedchem.5c03599",
+    "url": "https://doi.org/10.1021/acs.jmedchem.5c03599"
+  },
+  {
+    "title": "Discovery of a new GLP-1 receptor agonist using DNA encoded-libraries and similarity search",
+    "authors": "Lee JH, Kim D, Jeon H, Park SB, Koh B, Lim B, Lee KA, Choi KJ, Kim SS, Kwon Y, Lim JH, Jo JH, Park Y, Yu S, Cho NC, Namkung W, Lee Y, Kim HJ, Kim KY, Heo JN",
+    "journal": "Results in Chemistry",
+    "year": 2026,
+    "type": "journal",
+    "doi": "10.1016/j.rechem.2026.103415",
+    "url": "https://doi.org/10.1016/j.rechem.2026.103415"
+  },
+  {
     "title": "Structure-guided engineering of prototype foamy virus Env identifies key residues for heparan sulfate binding and enhances transduction efficiency",
     "authors": "Shin HS, Cho SY, Kwon Y, Jung SM, Seo ES, Son YM, Kim ET, Kim D, Kim KD",
     "journal": "Frontiers in Bioengineering and Biotechnology",
@@ -25,6 +43,24 @@
     "type": "journal",
     "doi": "10.1007/s00018-024-05535-2",
     "url": "https://doi.org/10.1007/s00018-024-05535-2"
+  },
+  {
+    "title": "Glutamyl aminopeptidase (Lactococcus)",
+    "authors": "Kim KK, Kim D",
+    "journal": "Handbook of Proteolytic Enzymes",
+    "year": 2025,
+    "type": "chapter",
+    "doi": "10.1016/b978-0-443-28849-4.00334-9",
+    "url": "https://doi.org/10.1016/b978-0-443-28849-4.00334-9"
+  },
+  {
+    "title": "Membrane Tethering of Honeybee Antimicrobial Peptides in\n                    Drosophila\n                    Enhances Pathogen Defense at the Cost of Stress‐Induced Host Vulnerability",
+    "authors": "Wei Y, Sun Y, Zhou X, Kim D, Lee J, Bang JK, Kim WJ",
+    "journal": "ChemBioChem",
+    "year": 2025,
+    "type": "journal",
+    "doi": "10.1002/cbic.202500271",
+    "url": "https://doi.org/10.1002/cbic.202500271"
   },
   {
     "title": "Single local delivery of 5′‐(N‐ethylcarboxamido)adenosine depots ameliorates myocardial infarction‐induced cardiac dysfunction via the enhancement of mitostasis",
@@ -67,7 +103,7 @@
     "authors": "Kang M, Kim D",
     "journal": "Methods in Molecular Biology",
     "year": 2023,
-    "type": "journal",
+    "type": "chapter",
     "doi": "10.1007/978-1-0716-3084-6_7",
     "url": "https://doi.org/10.1007/978-1-0716-3084-6_7"
   },
@@ -76,7 +112,7 @@
     "authors": "Kang M, Kim D",
     "journal": "Methods in Molecular Biology",
     "year": 2023,
-    "type": "journal",
+    "type": "chapter",
     "doi": "10.1007/978-1-0716-3084-6_4",
     "url": "https://doi.org/10.1007/978-1-0716-3084-6_4"
   },
@@ -400,7 +436,7 @@
     "authors": "Kim KK, Kim D",
     "journal": "Handbook of Proteolytic Enzymes",
     "year": 2013,
-    "type": "journal",
+    "type": "chapter",
     "doi": "10.1016/b978-0-12-382219-2.00370-7",
     "url": "https://doi.org/10.1016/b978-0-12-382219-2.00370-7"
   },

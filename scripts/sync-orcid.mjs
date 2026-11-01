@@ -43,6 +43,7 @@ function authorsFromCrossref(list = []) {
 
 function typeFromCrossref(t, journal) {
   if (t === "posted-content") return "preprint";
+  if (t === "book-chapter") return "chapter";
   if (t === "proceedings-article") return "conference";
   if (/review/i.test(journal || "")) return "review";
   return "journal";
@@ -72,7 +73,7 @@ async function main() {
   const out = [];
   for (const it of items) {
     let authors = "", journal = it.journal, year = it.year, title = it.title;
-    let type = it.orcidType === "JOURNAL_ARTICLE" ? "journal" : it.orcidType === "CONFERENCE_PAPER" ? "conference" : "journal";
+    let type = it.orcidType === "JOURNAL_ARTICLE" ? "journal" : it.orcidType === "CONFERENCE_PAPER" ? "conference" : /^BOOK/.test(it.orcidType) ? "chapter" : "journal";
     if (it.doi) {
       try {
         const { message: m } = await getJson(`https://api.crossref.org/works/${encodeURIComponent(it.doi)}`);

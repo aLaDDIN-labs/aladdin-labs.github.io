@@ -3,7 +3,10 @@
 #   authors: "Kim D, Lee J"
 #   journal: "Journal Name"
 #   year: 2026
-#   type: journal      # journal | preprint | conference | review
+#   type: journal      # journal | review | conference | preprint | chapter
+#   status: "in press" # optional, shown next to the journal
+#   mark: "*"          # optional: PI mark (* corresponding, # co-first)
 #   url: "https://..."
 #   doi: ""
+# Remove an entry here once the same paper shows up from ORCID (to avoid duplicates).
 []

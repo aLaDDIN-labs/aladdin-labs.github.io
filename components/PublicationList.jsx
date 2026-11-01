@@ -2,34 +2,57 @@
 import { useMemo, useState } from "react";
 import Authors from "./Authors";
 
-const TYPE_LABEL = { preprint: "preprint", conference: "conference" };
+// Categories, each numbered on its own (newest = largest number).
+const CATS = [
+  { id: "papers", label: "Papers", match: (p) => !["preprint", "chapter"].includes(p.type) },
+  { id: "preprints", label: "Preprints", match: (p) => p.type === "preprint" },
+  { id: "chapters", label: "Book chapters", match: (p) => p.type === "chapter" },
+];
+const TYPE_LABEL = { conference: "conference", review: "review" };
 
-export default function PublicationList({ pubs, topics, piName }) {
+export default function PublicationList({ pubs, topics, piName, patents = [] }) {
+  const [cat, setCat] = useState("papers");
   const [filter, setFilter] = useState("All");
   const [q, setQ] = useState("");
 
-  const used = useMemo(() => {
-    const ids = new Set(pubs.flatMap((p) => p.topics));
-    return topics.filter((t) => ids.has(t.id));
-  }, [pubs, topics]);
-
   const topicMap = useMemo(() => Object.fromEntries(topics.map((t) => [t.id, t])), [topics]);
 
-  // Fixed numbering: newest = largest number (independent of filters)
-  const numbered = useMemo(() => {
-    const sorted = [...pubs].sort((a, b) => (b.year || 0) - (a.year || 0));
-    return sorted.map((p, i) => ({ ...p, no: sorted.length - i }));
+  // per-category numbering, independent of filters
+  const byCat = useMemo(() => {
+    const out = {};
+    for (const c of CATS) {
+      const list = pubs.filter(c.match).sort((a, b) => (b.year || 0) - (a.year || 0));
+      out[c.id] = list.map((p, i) => ({ ...p, no: list.length - i }));
+    }
+    return out;
   }, [pubs]);
+
+  const sortedPatents = useMemo(() => {
+    const list = [...patents].sort((a, b) => (Number(b.year) || 0) - (Number(a.year) || 0));
+    return list.map((p, i) => ({ ...p, no: list.length - i }));
+  }, [patents]);
+
+  const tabs = [
+    ...CATS.filter((c) => c.id === "papers" || byCat[c.id].length > 0).map((c) => ({ id: c.id, label: c.label, n: byCat[c.id].length })),
+    ...(sortedPatents.length ? [{ id: "patents", label: "Patents", n: sortedPatents.length }] : []),
+  ];
+
+  const current = cat === "patents" ? [] : byCat[cat] ?? [];
+
+  const used = useMemo(() => {
+    const ids = new Set(current.flatMap((p) => p.topics));
+    return topics.filter((t) => ids.has(t.id));
+  }, [current, topics]);
 
   const rows = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    return numbered.filter((p) => {
+    return current.filter((p) => {
       if (filter === "Selected" && !p.selected) return false;
       if (filter !== "All" && filter !== "Selected" && !p.topics.includes(filter)) return false;
       if (needle && !`${p.title} ${p.authors} ${p.journal} ${p.year}`.toLowerCase().includes(needle)) return false;
       return true;
     });
-  }, [numbered, filter, q]);
+  }, [current, filter, q]);
 
   const byYear = useMemo(() => {
     const m = new Map();
@@ -39,66 +62,108 @@ export default function PublicationList({ pubs, topics, piName }) {
 
   const chips = [
     { id: "All", label: "All" },
-    { id: "Selected", label: "Selected" },
+    ...(cat === "papers" ? [{ id: "Selected", label: "Selected" }] : []),
     ...used.map((t) => ({ id: t.id, label: t.abbr, title: t.en })),
   ];
+
+  const switchCat = (id) => { setCat(id); setFilter("All"); setQ(""); };
+  const anyMark = current.some((p) => p.mark && (p.mark.includes("*") || p.mark.includes("#")));
 
   return (
     <>
       <div className="pub-toolbar">
-        <div className="container pub-toolbar-row">
-          <div className="chips" role="group" aria-label="Filter by topic">
-            {chips.map((c) => (
-              <button key={c.id} type="button" className="chip" title={c.title} aria-pressed={filter === c.id} onClick={() => setFilter(c.id)}>
-                {c.label}
+        {tabs.length > 1 && (
+          <div className="container cat-row" role="tablist" aria-label="Category">
+            {tabs.map((t) => (
+              <button key={t.id} type="button" role="tab" className="cat-tab" aria-selected={cat === t.id} onClick={() => switchCat(t.id)}>
+                {t.label} <span className="cat-n">{t.n}</span>
               </button>
             ))}
           </div>
-          <label className="search-field">
-            <span className="sr-only">Search publications</span>
-            <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search title, author, journal" />
-          </label>
-        </div>
-        {used.length > 0 && (
-          <div className="container tag-legend">
-            {used.map((t) => (<span key={t.id}><b>{t.abbr}</b> {t.en}</span>))}
-          </div>
+        )}
+        {cat !== "patents" && (
+          <>
+            <div className="container pub-toolbar-row">
+              <div className="chips" role="group" aria-label="Filter by topic">
+                {chips.map((c) => (
+                  <button key={c.id} type="button" className="chip" title={c.title} aria-pressed={filter === c.id} onClick={() => setFilter(c.id)}>
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+              <label className="search-field">
+                <span className="sr-only">Search publications</span>
+                <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search title, author, journal" />
+              </label>
+            </div>
+            {used.length > 0 && (
+              <div className="container tag-legend">
+                {used.map((t) => (<span key={t.id}><b>{t.abbr}</b> {t.en}</span>))}
+              </div>
+            )}
+          </>
         )}
       </div>
 
       <div className="container pub-body">
-        {numbered.some((p) => p.mark.includes("*") || p.mark.includes("#")) && (
-          <p className="pub-note"><b className="pi-mark">*</b> Corresponding author &nbsp; <b className="pi-mark">#</b> Co-first author</p>
-        )}
-        {byYear.length === 0 && <p className="muted">No publications match.</p>}
-        {byYear.map(([year, list]) => (
-          <section key={year} className="pub-year">
-            <h2 className="pub-year-label">{year || "-"}</h2>
+        {cat === "patents" ? (
+          <div className="pub-year" style={{ gridTemplateColumns: "1fr" }}>
             <div className="pub-list">
-              {list.map((p) => (
-                <article key={`${p.doi}${p.title}`} className="pub-entry numbered">
-                  <span className="pub-no" aria-label={`Publication ${p.no}`}>{p.no}</span>
+              {sortedPatents.map((p) => (
+                <article key={p.number || p.title} className="pub-entry numbered">
+                  <span className="pub-no">{p.no}</span>
                   <div className="pub-body-col">
-                  <div className="pub-venue">
-                    {p.journal}
-                    {TYPE_LABEL[p.type] && <> ({TYPE_LABEL[p.type]})</>}
-                  </div>
-                  <h3 className="pub-title">
-                    {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.title}</a> : p.title}
-                  </h3>
-                  <p className="pub-authors"><Authors text={p.authors} mark={p.mark} piName={piName} /></p>
-                  <div className="pub-meta">
-                    {p.selected && <span className="pub-flag">Selected</span>}
-                    {p.topics.map((id) => topicMap[id] && (
-                      <span key={id} className="tag tag-abbr" title={topicMap[id].en}>{topicMap[id].abbr}</span>
-                    ))}
-                  </div>
+                    <div className="pub-venue">
+                      {[p.country, p.number, p.status, p.year].filter(Boolean).join(" · ")}
+                    </div>
+                    <h3 className="pub-title">
+                      {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.title}</a> : p.title}
+                    </h3>
+                    <p className="pub-authors">
+                      <Authors text={p.inventors || ""} mark="" piName={piName} />
+                    </p>
                   </div>
                 </article>
               ))}
             </div>
-          </section>
-        ))}
+          </div>
+        ) : (
+          <>
+            {anyMark && (
+              <p className="pub-note"><b className="pi-mark">*</b> Corresponding author &nbsp; <b className="pi-mark">#</b> Co-first author</p>
+            )}
+            {byYear.length === 0 && <p className="muted">No publications match.</p>}
+            {byYear.map(([year, list]) => (
+              <section key={year} className="pub-year">
+                <h2 className="pub-year-label">{year || "-"}</h2>
+                <div className="pub-list">
+                  {list.map((p) => (
+                    <article key={`${p.doi}${p.title}`} className="pub-entry numbered">
+                      <span className="pub-no" aria-label={`${CATS.find((c) => c.id === cat)?.label} ${p.no}`}>{p.no}</span>
+                      <div className="pub-body-col">
+                        <div className="pub-venue">
+                          {p.journal}
+                          {TYPE_LABEL[p.type] && <> ({TYPE_LABEL[p.type]})</>}
+                          {p.status && <> · <em className="pub-status">{p.status}</em></>}
+                        </div>
+                        <h3 className="pub-title">
+                          {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.title}</a> : p.title}
+                        </h3>
+                        <p className="pub-authors"><Authors text={p.authors} mark={p.mark} piName={piName} /></p>
+                        <div className="pub-meta">
+                          {p.selected && <span className="pub-flag">Selected</span>}
+                          {p.topics.map((id) => topicMap[id] && (
+                            <span key={id} className="tag tag-abbr" title={topicMap[id].en}>{topicMap[id].abbr}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </>
+        )}
       </div>
     </>
   );
