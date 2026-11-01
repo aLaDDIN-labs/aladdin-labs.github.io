@@ -3,6 +3,7 @@
 #   selected: true to show under "Selected" and on the Home page
 #   figure:   optional image path (public/images/pubs/...)
 #   hidden:   true to hide a record
+#   mark:     PI mark after Kim's name: "*" corresponding, "#" co-first, "#*" both, "" none (overrides journal rule in site.yaml)
 #
 # Example:
 # "10.1038/s41467-025-00000-0":

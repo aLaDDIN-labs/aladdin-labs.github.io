@@ -1,21 +1,10 @@
 "use client";
 import { useMemo, useState } from "react";
+import Authors from "./Authors";
 
-const TYPE_LABEL = {
-  preprint: { en: "preprint", ko: "프리프린트" },
-  conference: { en: "conference", ko: "학회 발표" },
-};
+const TYPE_LABEL = { preprint: "preprint", conference: "conference" };
 
-function Bi({ en, ko }) {
-  return (
-    <>
-      <span className="en-only">{en}</span>
-      <span className="ko-only">{ko}</span>
-    </>
-  );
-}
-
-export default function PublicationList({ pubs, topics }) {
+export default function PublicationList({ pubs, topics, piName }) {
   const [filter, setFilter] = useState("All");
   const [q, setQ] = useState("");
 
@@ -26,15 +15,21 @@ export default function PublicationList({ pubs, topics }) {
 
   const topicMap = useMemo(() => Object.fromEntries(topics.map((t) => [t.id, t])), [topics]);
 
+  // Fixed numbering: newest = largest number (independent of filters)
+  const numbered = useMemo(() => {
+    const sorted = [...pubs].sort((a, b) => (b.year || 0) - (a.year || 0));
+    return sorted.map((p, i) => ({ ...p, no: sorted.length - i }));
+  }, [pubs]);
+
   const rows = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    return pubs.filter((p) => {
+    return numbered.filter((p) => {
       if (filter === "Selected" && !p.selected) return false;
       if (filter !== "All" && filter !== "Selected" && !p.topics.includes(filter)) return false;
       if (needle && !`${p.title} ${p.authors} ${p.journal} ${p.year}`.toLowerCase().includes(needle)) return false;
       return true;
     });
-  }, [pubs, filter, q]);
+  }, [numbered, filter, q]);
 
   const byYear = useMemo(() => {
     const m = new Map();
@@ -43,9 +38,9 @@ export default function PublicationList({ pubs, topics }) {
   }, [rows]);
 
   const chips = [
-    { id: "All", en: "All", ko: "전체" },
-    { id: "Selected", en: "Selected", ko: "주요 논문" },
-    ...used,
+    { id: "All", label: "All" },
+    { id: "Selected", label: "Selected" },
+    ...used.map((t) => ({ id: t.id, label: t.abbr, title: t.en })),
   ];
 
   return (
@@ -54,48 +49,50 @@ export default function PublicationList({ pubs, topics }) {
         <div className="container pub-toolbar-row">
           <div className="chips" role="group" aria-label="Filter by topic">
             {chips.map((c) => (
-              <button key={c.id} type="button" className="chip" aria-pressed={filter === c.id} onClick={() => setFilter(c.id)}>
-                <Bi en={c.en} ko={c.ko} />
+              <button key={c.id} type="button" className="chip" title={c.title} aria-pressed={filter === c.id} onClick={() => setFilter(c.id)}>
+                {c.label}
               </button>
             ))}
           </div>
           <label className="search-field">
             <span className="sr-only">Search publications</span>
-            <input
-              type="search"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search title, author, journal · 제목, 저자, 저널"
-            />
+            <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search title, author, journal" />
           </label>
         </div>
+        {used.length > 0 && (
+          <div className="container tag-legend">
+            {used.map((t) => (<span key={t.id}><b>{t.abbr}</b> {t.en}</span>))}
+          </div>
+        )}
       </div>
 
       <div className="container pub-body">
-        {byYear.length === 0 && (
-          <p className="muted"><Bi en="No publications match." ko="일치하는 논문이 없습니다." /></p>
+        {numbered.some((p) => p.mark.includes("*") || p.mark.includes("#")) && (
+          <p className="pub-note"><b className="pi-mark">*</b> Corresponding author &nbsp; <b className="pi-mark">#</b> Co-first author</p>
         )}
+        {byYear.length === 0 && <p className="muted">No publications match.</p>}
         {byYear.map(([year, list]) => (
           <section key={year} className="pub-year">
-            <h2 className="pub-year-label">{year || "—"}</h2>
+            <h2 className="pub-year-label">{year || "-"}</h2>
             <div className="pub-list">
               {list.map((p) => (
                 <article key={`${p.doi}${p.title}`} className="pub-entry">
+                  <span className="pub-no" aria-label={`Publication ${p.no}`}>{p.no}</span>
+                  <div className="pub-body-col">
                   <div className="pub-venue">
                     {p.journal}
-                    {TYPE_LABEL[p.type] && (
-                      <> (<Bi en={TYPE_LABEL[p.type].en} ko={TYPE_LABEL[p.type].ko} />)</>
-                    )}
+                    {TYPE_LABEL[p.type] && <> ({TYPE_LABEL[p.type]})</>}
                   </div>
                   <h3 className="pub-title">
                     {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.title}</a> : p.title}
                   </h3>
-                  <p className="pub-authors">{p.authors}</p>
+                  <p className="pub-authors"><Authors text={p.authors} mark={p.mark} piName={piName} /></p>
                   <div className="pub-meta">
-                    {p.selected && <span className="pub-flag"><Bi en="Selected" ko="주요 논문" /></span>}
+                    {p.selected && <span className="pub-flag">Selected</span>}
                     {p.topics.map((id) => topicMap[id] && (
-                      <span key={id} className="tag"><Bi en={topicMap[id].en} ko={topicMap[id].ko} /></span>
+                      <span key={id} className="tag tag-abbr" title={topicMap[id].en}>{topicMap[id].abbr}</span>
                     ))}
+                  </div>
                   </div>
                 </article>
               ))}

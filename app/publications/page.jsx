@@ -6,7 +6,7 @@ export const metadata = { title: "Publications" };
 
 export default function Publications() {
   const pubs = getPublications();
-  const { topics } = getSite();
+  const { topics, pi_name } = getSite();
   return (
     <>
       <header className="page-head">
@@ -25,7 +25,7 @@ export default function Publications() {
           </p>
         </div>
       ) : (
-        <PublicationList pubs={pubs} topics={topics} />
+        <PublicationList pubs={pubs} topics={topics} piName={pi_name} />
       )}
     </>
   );

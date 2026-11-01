@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { L } from "./L";
+import MobileMenu from "./MobileMenu";
 
 const nav = [
   { href: "/research/", en: "Research", ko: "연구" },
   { href: "/publications/", en: "Publications", ko: "논문" },
   { href: "/news/", en: "News", ko: "소식" },
-  { href: "/team/", en: "Team", ko: "구성원" },
+  { href: "/team/", en: "Members", ko: "구성원" },
   { href: "/join/", en: "Join", ko: "합류" },
 ];
 
@@ -28,7 +29,8 @@ export default function Header({ name }) {
           ))}
         </nav>
         <div className="header-side">
-          <Link className="btn btn-soft btn-sm" href="/contact/"><L en="Contact" ko="연락처" /></Link>
+          <Link className="btn btn-soft btn-sm btn-contact" href="/contact/"><L en="Contact" ko="연락처" /></Link>
+          <MobileMenu items={nav.map(({ href, en }) => ({ href, label: en }))} />
         </div>
       </div>
     </header>

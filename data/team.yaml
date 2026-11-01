@@ -1,9 +1,9 @@
-# Team page. `group`: pi | member | alumni. Photos go in public/images/team/.
+# Team page. `group`: pi | current | alumni. Photos go in public/images/team/.
 # TODO: confirm English name spelling, add photo and bio.
 - id: pi
   group: pi
   name:
-    en: Do-Yeon Kim
+    en: Doyoun Kim
     ko: 김도연
   role:
     en: Principal Investigator
@@ -21,7 +21,7 @@
 
 # Example member (delete or edit)
 # - id: member-1
-#   group: member
+#   group: current
 #   name: { en: "Name", ko: "이름" }
 #   role: { en: "PhD student", ko: "박사과정" }
 #   position: { en: "", ko: "" }

@@ -1,3 +1,4 @@
+import Authors from "../components/Authors";
 import Link from "next/link";
 import MoleculeField from "../components/MoleculeField";
 import { L, T } from "../components/L";
@@ -7,9 +8,10 @@ export default function Home() {
   const site = getSite();
   const research = getResearch();
   const selected = getPublications().filter((p) => p.selected).slice(0, 4);
-  const team = getTeam().filter((m) => m.group === "pi" || m.group === "member");
+  const team = getTeam().filter((m) => m.group === "pi" || m.group === "current" || m.group === "member");
   const news = getNews().slice(0, 4);
   const recent = getPublications().slice(0, 4);
+  const topicMap = Object.fromEntries(site.topics.map((t) => [t.id, t]));
 
   return (
     <>
@@ -54,7 +56,17 @@ export default function Home() {
                     <h3 className="pub-title">
                       {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.title}</a> : p.title}
                     </h3>
-                    <p className="pub-authors">{p.authors}</p>
+                    <p className="pub-authors"><Authors text={p.authors} mark={p.mark} piName={site.pi_name} /></p>
+                  <div className="pub-meta">
+                    {p.topics.map((id) => topicMap[id] && (
+                      <span key={id} className="tag tag-abbr" title={topicMap[id].en}>{topicMap[id].abbr}</span>
+                    ))}
+                  </div>
+                    <div className="pub-meta">
+                      {p.topics.map((id) => topicMap[id] && (
+                        <span key={id} className="tag tag-abbr" title={topicMap[id].en}>{topicMap[id].abbr}</span>
+                      ))}
+                    </div>
                   </article>
                 ))}
               </div>
@@ -121,7 +133,12 @@ export default function Home() {
                   <h3 className="pub-title">
                     {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.title}</a> : p.title}
                   </h3>
-                  <p className="pub-authors">{p.authors}</p>
+                  <p className="pub-authors"><Authors text={p.authors} mark={p.mark} piName={site.pi_name} /></p>
+                  <div className="pub-meta">
+                    {p.topics.map((id) => topicMap[id] && (
+                      <span key={id} className="tag tag-abbr" title={topicMap[id].en}>{topicMap[id].abbr}</span>
+                    ))}
+                  </div>
                 </article>
               ))}
             </div>
@@ -136,8 +153,8 @@ export default function Home() {
       <section className="section">
         <div className="container">
           <div className="section-head">
-            <p className="eyebrow"><L en="Team" ko="구성원" /></p>
-            <h2 className="h2"><L en="People" ko="사람들" /></h2>
+            <p className="eyebrow">Members</p>
+            <h2 className="h2">People</h2>
           </div>
           <div className="team-strip">
             {team.map((m) => (

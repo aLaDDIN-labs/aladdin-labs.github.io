@@ -1,23 +1,23 @@
 import { L, T } from "../../components/L";
 import { getTeam } from "../../lib/data";
 
-export const metadata = { title: "Team" };
+export const metadata = { title: "Members" };
 
 const GROUPS = [
-  { id: "pi", en: "Principal Investigator", ko: "연구책임자" },
-  { id: "member", en: "Members", ko: "구성원" },
-  { id: "alumni", en: "Alumni", ko: "졸업생" },
+  { id: "pi", en: "PI" },
+  { id: "current", en: "Current" },
+  { id: "alumni", en: "Alumni" },
 ];
 
 export default function Team() {
-  const team = getTeam();
+  const team = getTeam().map((m) => (m.group === "member" ? { ...m, group: "current" } : m));
   const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
   return (
     <>
       <header className="page-head">
         <div className="container">
-          <p className="eyebrow"><L en="Team" ko="구성원" /></p>
-          <h1 className="h1"><L en="Team" ko="구성원" /></h1>
+          <p className="eyebrow">Members</p>
+          <h1 className="h1">Members</h1>
         </div>
       </header>
       <div className="container">

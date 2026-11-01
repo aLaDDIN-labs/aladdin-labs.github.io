@@ -30,31 +30,36 @@ contact:
 # `keywords` is a regex matched against title + journal; it labels papers automatically.
 # Add `tags: [id, ...]` for a paper in data/publication-meta.yaml to set tags explicitly.
 topics:
-  - id: degrader
-    en: Degrader
-    ko: 분해제
-    keywords: "degrader|protac|molecular glue|ubiquitin|e3 ligase|cereblon|crbn|proteasom|autophagy|attec"
-  - id: structure
-    en: Structural biology
-    ko: 구조생물학
-    keywords: "crystal|cryo-?em|structur|x-ray|nmr|ternary complex"
-  - id: neuro
-    en: Neuro circuit
-    ko: 신경회로
-    keywords: "synap|neuron|circuit|brain|cortex|hippocamp|cerebell|shank|psd-?95|neurogenesis"
+  # abbr is shown as a badge on every publication; keywords (regex, case-insensitive) auto-tag by title + journal.
+  # You can also force tags per paper in publication-meta.yaml (tags: [dd, asd, ad, gpcr, cip]).
+  - id: dd
+    abbr: DD
+    en: Drug discovery
+    keywords: "degrader|protac|molecular glue|\\bglue\\b|inhibitor|\\bdrug|screening|binder|ligand|compound|small[- ]molecule|cereblon|crbn|ubiquitin|e3 ligase|proteasom|autophagy|attec|agonist|antagonist|therapeutic|docking"
+  - id: asd
+    abbr: ASD
+    en: Autism spectrum disorder
+    keywords: "autis|\\basd\\b|shank|neurodevelopment|adnp|ash1l|psd-?95|synaptopath"
+  - id: ad
+    abbr: AD
+    en: Alzheimer's disease
+    keywords: "alzheimer|amyloid|\\btau\\b|\\bapp\\b|neurodegenerat|nurr1"
   - id: gpcr
+    abbr: GPCR
     en: GPCR
-    ko: GPCR
-    keywords: "gpcr|g protein-coupled|5-?ht|serotonin|dopamine|receptor agonist"
-  - id: alzheimer
-    en: Alzheimer
-    ko: 알츠하이머
-    keywords: "alzheimer|amyloid|\\btau\\b"
-  - id: computational
-    en: Computational
-    ko: 계산
-    keywords: "machine learning|deep learning|docking|molecular dynamics|virtual screening|alphafold|computational|in silico"
-  - id: review
-    en: Review
-    ko: 리뷰
-    keywords: "\\breview\\b|\\bperspective\\b|opinion in"
+    keywords: "gpcr|g protein-coupled|g-protein|5-?ht|serotonin|dopamine receptor|orexin|ghrelin|arrestin|cannabinoid"
+  - id: cip
+    abbr: CIP
+    en: Chemically induced proximity
+    keywords: "induced proximity|proximity|degrader|protac|molecular glue|\\bglue\\b|ternary|heterobifunctional|cereblon|crbn|ddb1|gspt1|ikzf|e3 ligase|e3 ubiquitin|ubiquitin ligase|targeted protein degradation|attec|lysosome-targeting|neo-?substrate|dimerizer"
+
+# Author marks for the PI (shown after the name in bold orange).
+#   *  = (co-)corresponding author     #  = co-first author     "#*" allowed
+# pi_name: regex that finds the PI in the author string (ORCID/Crossref writes "Kim DY").
+# By journal (applied to every paper in that journal); override per paper in publication-meta.yaml (mark: "#").
+pi_name: "Doyoun Kim|Do-?youn Kim|Kim D(Y)?(?![A-Za-z])"
+author_marks:
+  - { journal: "^results in chemistry", mark: "*" }
+  - { journal: "^frontiers in bioengineering", mark: "*" }
+  - { journal: "^frontiers in microbiology", mark: "*" }
+  - { journal: "^neuron$", mark: "#" }
