@@ -1,9 +1,24 @@
 # Patents. Newest first is automatic (by year). Add one entry per patent.
 # - title: "Patent title"
 #   inventors: "Kim D, Lee J"
-#   number: "KR 10-2025-0000000"     # application / registration number
+#   application: "10-2025-0000000"   # application number
+#   registration: "10-0000000"       # registration number (when granted)
+#   number: "AU2022214582C1"         # or a single publication/patent number
 #   country: "KR"                     # KR | US | PCT | EP ...
-#   status: "Registered"              # Filed | Registered | Published ...
+#   status: "Registered"              # Filed | Registered | Granted | Published ...
 #   year: 2025
 #   url: ""                           # optional link
-[]
+- title: "Benzothiazole and benzimidazole derivatives, pharmaceutically acceptable salt thereof, preparation method therefor, and pharmaceutical composition comprising same as active ingredient"
+  inventors: "Jeong KY, Jung HJ, Kim D, Kim KR, Lee J, Lee KM, Rhee SD"
+  country: KR
+  application: "10-2022-0009159"
+  registration: "10-2694819"
+  status: Registered
+  year: 2024
+- title: "Benzothiazole and benzimidazole derivatives, pharmaceutically acceptable salt thereof, preparation method therefor, and pharmaceutical composition comprising same as active ingredient"
+  inventors: "Jeong KY, Jung HJ, Kim D, Kim KR, Lee J, Lee KM, Rhee SD"
+  country: AU
+  number: "AU2022214582C1"
+  status: Granted
+  year: 2024
+  url: "https://patents.google.com/patent/AU2022214582C1/en"

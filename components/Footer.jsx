@@ -21,6 +21,7 @@ export default function Footer({ site }) {
           <h3 className="eyebrow"><L en="Lab" ko="연구실" /></h3>
           <ul className="plain">
             <li><Link href="/research/"><L en="Research" ko="연구" /></Link></li>
+            <li><Link href="/philosophy/"><L en="Philosophy" ko="철학" /></Link></li>
             <li><Link href="/publications/"><L en="Publications" ko="논문" /></Link></li>
             <li><Link href="/team/"><L en="Team" ko="구성원" /></Link></li>
             <li><Link href="/join/"><L en="Join the lab" ko="합류하기" /></Link></li>

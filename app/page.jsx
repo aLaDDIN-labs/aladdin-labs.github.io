@@ -29,7 +29,13 @@ export default function Home() {
         />
         <div className="container hero-inner">
           <p className="eyebrow">{site.name}</p>
-          <h1 className="display"><T v={site.tagline} /></h1>
+          <h1 className="display">
+            {(() => {
+              const t = site.tagline.en;
+              const m = t.match(/^(A Lab for )(.+)$/);
+              return m ? (<><span className="light">{m[1]}</span><strong>{m[2]}</strong></>) : t;
+            })()}
+          </h1>
           <p className="lede"><T v={site.intro} /></p>
           <div className="hero-cta">
             <Link className="btn btn-primary" href="/research/"><L en="Our research" ko="연구 소개" /></Link>

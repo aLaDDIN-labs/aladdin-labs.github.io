@@ -4,6 +4,7 @@ import MobileMenu from "./MobileMenu";
 
 const nav = [
   { href: "/research/", en: "Research", ko: "연구" },
+  { href: "/philosophy/", en: "Philosophy", ko: "철학" },
   { href: "/publications/", en: "Publications", ko: "논문" },
   { href: "/news/", en: "News", ko: "소식" },
   { href: "/team/", en: "Members", ko: "구성원" },

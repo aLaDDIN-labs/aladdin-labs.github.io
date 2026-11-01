@@ -252,3 +252,57 @@ html[data-lang="ko"] .en-only { display: none; }
 .cat-tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--orange); }
 .cat-n { font-size: 0.75rem; color: var(--orange-ink); font-weight: 600; margin-left: 2px; }
 .pub-status { font-style: normal; color: var(--muted); }
+
+/* Typography: light display headings with bold emphasis (Monte Rosa-like) */
+.display, .h1, .h2 { font-weight: 300; letter-spacing: -0.04em; }
+.display strong, .h1 strong, .h2 strong { font-weight: 700; }
+.display .light { font-weight: 300; }
+.display strong { display: block; }
+.nav a { font-weight: 500; }
+
+/* Philosophy page */
+.phil-head { padding-bottom: 28px; }
+.phil-title { margin: 0 0 22px; font-size: clamp(2rem, 5.4vw, 4.4rem); line-height: 1.04; letter-spacing: -0.045em; font-weight: 300; color: var(--ink); max-width: 20ch; }
+.phil-title .light { display: block; font-weight: 300; }
+.phil-title strong { display: block; font-weight: 700; margin-top: 4px; }
+.hl { background: linear-gradient(transparent 66%, rgba(243, 152, 0, 0.38) 66%); box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 0 2px; }
+.phil-sub { margin: 0; max-width: 46ch; font-size: clamp(1.1rem, 1.6vw, 1.4rem); line-height: 1.45; font-weight: 500; color: var(--ink); letter-spacing: -0.015em; }
+.phil-art { position: relative; margin: 8px 0 0; }
+.phil-art img { display: block; width: 100%; height: clamp(300px, 46vw, 640px); object-fit: cover; object-position: center 40%;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 82%, transparent 100%); }
+.phil-body { padding: 32px 0 120px; }
+.phil-step { display: grid; grid-template-columns: 120px 1fr; gap: 24px; padding: 48px 0; border-top: 1px solid var(--line); max-width: 960px; }
+.phil-num { font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 300; letter-spacing: -0.04em; color: var(--orange-ink); line-height: 1; }
+.phil-h { margin: 0 0 18px; font-size: clamp(1.5rem, 2.8vw, 2.2rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.12; color: var(--ink); }
+.phil-text p { margin: 0 0 16px; font-size: 1.12rem; line-height: 1.6; font-weight: 400; color: #2a2d33; max-width: 62ch; }
+.phil-points { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.phil-points li { background: #f5f5f5; border-radius: 20px; padding: 24px 24px 8px; }
+.phil-points h3 { margin: 0 0 8px; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+.phil-points p { font-size: 1rem; }
+.phil-quote { margin: 24px 0 0; padding: 28px 0 0 28px; border-left: 3px solid var(--orange); max-width: 26ch; font-size: clamp(1.5rem, 3vw, 2.4rem); line-height: 1.2; font-weight: 300; letter-spacing: -0.035em; color: var(--ink); width: min(900px, 100%); max-width: none; }
+.phil-quote strong { font-weight: 700; }
+@media (max-width: 860px) {
+  .phil-step { grid-template-columns: 1fr; gap: 12px; padding: 32px 0; }
+  .phil-points { grid-template-columns: 1fr; }
+}
+.display { font-size: clamp(2.4rem, 5vw, 4.3rem); }
+
+/* Philosophy hero: headline over the artwork, proteins colourise on hover */
+.carpet-stage { position: relative; overflow: hidden; height: max(560px, min(56vw, 840px)); background: #f7f7f4; }
+.carpet-canvas { position: absolute; left: 50%; bottom: 0; width: max(100%, 1000px); aspect-ratio: 1376 / 768; transform: translateX(-50%); }
+.carpet-base { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; }
+.carpet-part { position: absolute; opacity: 0; transition: opacity 0.55s ease; pointer-events: none; user-select: none; filter: drop-shadow(0 8px 14px rgba(90, 80, 140, 0.18)); }
+.carpet-part.is-on { opacity: 1; }
+.carpet-scrim { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,0.82) 0, rgba(255,255,255,0.5) 34%, rgba(255,255,255,0) 58%),
+              linear-gradient(90deg, rgba(255,255,255,0.45) 0, rgba(255,255,255,0) 50%); }
+.carpet-text { position: absolute; top: clamp(40px, 6vw, 84px); left: 50%; transform: translateX(-50%); pointer-events: none; }
+.carpet-text .phil-title { max-width: 18ch; }
+@media (max-width: 860px) {
+  .carpet-stage { height: 600px; background: #fff; }
+  .carpet-canvas { width: 1075px; }
+  .carpet-scrim { background: linear-gradient(180deg, rgba(255,255,255,0.9) 0, rgba(255,255,255,0.7) 45%, rgba(255,255,255,0) 72%); }
+}
+
+.carpet-text .phil-title, .carpet-text .phil-sub { text-shadow: 0 0 22px rgba(255,255,255,0.95), 0 0 6px rgba(255,255,255,0.8); }

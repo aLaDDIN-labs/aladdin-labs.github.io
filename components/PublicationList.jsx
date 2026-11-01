@@ -112,18 +112,20 @@ export default function PublicationList({ pubs, topics, piName, patents = [] }) 
           <div className="pub-year" style={{ gridTemplateColumns: "1fr" }}>
             <div className="pub-list">
               {sortedPatents.map((p) => (
-                <article key={p.number || p.title} className="pub-entry numbered">
+                <article key={p.registration || p.number || p.title} className="pub-entry numbered">
                   <span className="pub-no">{p.no}</span>
                   <div className="pub-body-col">
                     <div className="pub-venue">
-                      {[p.country, p.number, p.status, p.year].filter(Boolean).join(" · ")}
+                      {[p.country, p.number, p.registration && `Reg. No. ${p.registration}`, p.application && `Appl. No. ${p.application}`, p.status, p.year].filter(Boolean).join(" · ")}
                     </div>
                     <h3 className="pub-title">
                       {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.title}</a> : p.title}
                     </h3>
-                    <p className="pub-authors">
-                      <Authors text={p.inventors || ""} mark="" piName={piName} />
-                    </p>
+                    {p.inventors && (
+                      <p className="pub-authors">
+                        <Authors text={p.inventors} mark="" piName={piName} />
+                      </p>
+                    )}
                   </div>
                 </article>
               ))}
