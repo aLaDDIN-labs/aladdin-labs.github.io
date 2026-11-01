@@ -59,6 +59,8 @@ topics:
 # By journal (applied to every paper in that journal); override per paper in publication-meta.yaml (mark: "#").
 pi_name: "Doyoun Kim|Do-?youn Kim|Kim D(Y)?(?![A-Za-z])"
 author_marks:
+  # pos: 2 = the PI is the 2nd "Kim D" in the author list (when another Kim D appears earlier)
+  - { title: "carbonic anhydrase 9", year: 2025, journal: "^results in chemistry", mark: "*", pos: 2 }
   # rules may combine journal / title / year (all given conditions must match); first match wins
   - { title: "arid1b", year: 2022, journal: "^nature communications", mark: "#" }
   - { journal: "^results in chemistry", mark: "*" }

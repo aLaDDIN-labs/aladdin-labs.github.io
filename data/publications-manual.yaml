@@ -9,4 +9,30 @@
 #   url: "https://..."
 #   doi: ""
 # Remove an entry here once the same paper shows up from ORCID (to avoid duplicates).
-[]
+- title: "ACC hyperactivity and synaptic remodeling underlie sensory hypersensitivity in Adnp-haploinsufficient mice"
+  authors: "Moon H, Cha DH, Lee S, Im GH, Choi SH, Jin SY, Cho YS, Cho H, Noh YW, Yang Y, Chun J, Lee S, Kang H, Kim J, Kim D, Bae YC, Jung I, Kim SG, Chung C, Kim E"
+  journal: "Molecular Psychiatry"
+  year: 2026
+  type: journal
+  status: "in press"
+  tags: [asd]
+- title: "Adult restoration of Shank2 rescues sociability via synaptic phosphoproteomic remodeling and posterior parietal network recovery"
+  authors: "Yeo Y, Im GH, Choi SH, Lee C, Yang Y, Kim W, Yoo YE, Chung C, Kwon Y, Ryu J, Kim Y, Kim JY, Kim D, Kim SG, Kim E"
+  journal: "Nature Communications"
+  year: 2026
+  type: journal
+  status: "in press"
+  tags: [asd]
+- title: "A natural product-derived degrader (COT-01): cortisone-based CRBN recruitment for cyclin D2 degradation in multiple myeloma"
+  authors: "Lee SH, Kim SA, Lee KE, Lim Y, Ahn HJ, Kim D, Jang WD, Lim HJ, Lee JH, Oh KS"
+  journal: "Bioorganic Chemistry"
+  year: 2026
+  type: journal
+  doi: "10.1016/j.bioorg.2026.110615"
+- title: "Hybrid fluorescence polarization and structure-based virtual screening strategy identifies a direct binder of the TRIB2 pseudokinase"
+  authors: "Kim J, Kim N, Kang M, Lee MW, Kim SH, Kim KK, Oh C, Kim D"
+  journal: "Bulletin of the Korean Chemical Society"
+  year: 2026
+  type: journal
+  status: "in press"
+  mark: "*"

@@ -151,7 +151,7 @@ export default function PublicationList({ pubs, topics, piName, patents = [] }) 
                         <h3 className="pub-title">
                           {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.title}</a> : p.title}
                         </h3>
-                        <p className="pub-authors"><Authors text={p.authors} mark={p.mark} piName={piName} /></p>
+                        <p className="pub-authors"><Authors text={p.authors} mark={p.mark} pos={p.piPos} piName={piName} /></p>
                         <div className="pub-meta">
                           {p.selected && <span className="pub-flag">Selected</span>}
                           {p.topics.map((id) => topicMap[id] && (
