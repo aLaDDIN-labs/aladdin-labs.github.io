@@ -468,3 +468,7 @@ html[data-lang="ko"] .en-only { display: none; }
   .contact-grid { grid-template-columns: 1fr; gap: 32px; padding: 36px 0 70px; }
   .contact-info dl { grid-template-columns: 90px 1fr; }
 }
+
+/* Home: tighten the gap between "Recent publications" and the next section */
+.latest { padding-bottom: clamp(12px, 2vw, 28px); }
+.latest + .section { padding-top: clamp(28px, 4vw, 52px); }
