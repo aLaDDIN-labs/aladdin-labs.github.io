@@ -1,0 +1,14 @@
+# Contact details used by the footer and the Contact page.
+# (Kept separate from site.yaml so editing it never touches other settings.)
+group: ALADDIN Lab
+institution: Korea Research Institute of Chemical Technology (KRICT)
+address:
+  - 141 Gajeong-ro, Yuseong District
+  - Daejeon, 34114, Republic of Korea
+office: "Bldg N5, Room 308 (Office) / Room 305 (Lab)"
+phone: "+82-42-860-7549 (Office)"
+emails:
+  - kimd82@krict.re.kr
+  - kimd82@ust.ac.kr
+# Text used to place the pin on the map
+map_query: "Korea Research Institute of Chemical Technology, 141 Gajeong-ro, Yuseong-gu, Daejeon"

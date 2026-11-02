@@ -443,3 +443,28 @@ html[data-lang="ko"] .en-only { display: none; }
 .lb-thumbs button.on { opacity: 1; outline-color: var(--orange); }
 .lb-thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; max-height: none; border-radius: 0; }
 .lb img { max-height: calc(100vh - 230px); }
+
+/* Footer: bottom-aligned columns + full contact block */
+.footer-grid { align-items: end; grid-template-columns: 1.3fr .8fr 1.2fr; }
+.footer-grid > div { display: flex; flex-direction: column; justify-content: flex-end; }
+.footer-grid .eyebrow { margin-bottom: 14px; }
+.footer-addr { font-style: normal; font-size: .95rem; line-height: 1.55; color: #333; }
+.footer-addr p { margin: 0 0 10px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 0 !important; font-weight: 500; }
+.footer-grid .plain li { margin-bottom: 8px; }
+/* Contact page */
+.contact-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 48px; padding: 56px 0 100px; align-items: stretch; }
+.contact-info h2 { margin: 0 0 4px; font-size: 1.7rem; font-weight: 600; letter-spacing: -.02em; }
+.contact-inst { margin: 0 0 26px; color: #666; }
+.contact-info dl { margin: 0; display: grid; grid-template-columns: 110px 1fr; gap: 14px 18px; }
+.contact-info dt { color: var(--orange-ink); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; padding-top: 4px; }
+.contact-info dd { margin: 0; line-height: 1.55; }
+.contact-info a { text-decoration: underline; text-underline-offset: 3px; }
+.contact-info .btn { text-decoration: none; }
+.contact-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.contact-map { min-height: 380px; border-radius: 20px; overflow: hidden; background: #eceff0; border: 1px solid var(--line); }
+.contact-map iframe { width: 100%; height: 100%; min-height: 380px; border: 0; display: block; }
+@media (max-width: 860px) {
+  .contact-grid { grid-template-columns: 1fr; gap: 32px; padding: 36px 0 70px; }
+  .contact-info dl { grid-template-columns: 90px 1fr; }
+}
