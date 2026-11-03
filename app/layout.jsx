@@ -1,6 +1,7 @@
 import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import SmoothScroll from "../components/SmoothScroll";
 import { getSite } from "../lib/data";
 
 const site = getSite();
@@ -31,6 +32,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
+        <SmoothScroll />
         <Header name={site.name} />
         <main id="main">{children}</main>
         <Footer site={site} />
