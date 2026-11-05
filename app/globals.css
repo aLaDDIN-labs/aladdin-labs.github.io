@@ -485,3 +485,8 @@ html[data-lang="ko"] .en-only { display: none; }
 .pnow::before { content: "Now · "; color: #999; }
 .mm-now { margin: 10px 0 0; font-size: .95rem; }
 .mm-now span { display: inline-block; margin-right: 10px; color: var(--orange-ink); font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+
+.mm-focus { margin: 16px 0 0; }
+.mm-focus h4 { margin: 0 0 6px; color: var(--orange-ink); font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+.mm-focus ul { margin: 0; padding-left: 18px; font-size: .93rem; line-height: 1.5; }
+.mm-focus li { margin: 3px 0; }
