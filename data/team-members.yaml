@@ -53,6 +53,7 @@
   name: { en: Dahyun Kang }
   role: { en: PhD student }
   position: { en: "Sungkyunkwan University (SKKU) · KRICT" }
+  photo: /images/team/dahyun-kang.webp
   # currently in Prof. Gayoung Jung's lab, College of Pharmacy, SKKU
   education:
     - { years: "2024.09–Present", text: "PhD student, Sungkyunkwan University" }
@@ -86,6 +87,7 @@
   group: alumni
   name: { en: Daeun Lim }
   role: { en: UST intern }
+  photo: /images/team/daeun-lim.webp
   now: { en: "PhD student, Center for Synaptic Brain Dysfunction, IBS" }
   career:
     - { years: "Joined 2025.07", text: "UST internship, ALADDIN Lab" }
