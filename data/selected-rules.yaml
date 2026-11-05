@@ -1,0 +1,14 @@
+# Papers from these journals are shown as "Selected" automatically (regex on the journal name, case-insensitive).
+# To force one paper in or out, set `selected: true` / `selected: false` for its DOI in publication-meta.yaml.
+journals:
+  - "^Nature\\b"                       # Nature and all Nature-family journals (Nature Communications, Nature Neuroscience, ...)
+  - "^Science$"
+  - "^Cell$"
+  - "^Neuron$"
+  - "^Nucleic Acids Research$"
+  - "^Journal of the American Chemical Society$"
+  - "^Proceedings of the National Academy of Sciences"
+  - "^Molecular Psychiatry$"
+  - "^Biological Psychiatry$"
+  - "^EMBO Molecular Medicine$"
+  - "^Annals of Neurology$"

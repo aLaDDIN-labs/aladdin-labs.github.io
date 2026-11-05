@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 
@@ -9,6 +9,7 @@ const REVEAL =
 // Inertia scrolling (Lenis) + gentle fade-up on scroll, similar to Apple's product pages.
 export default function SmoothScroll() {
   const path = usePathname();
+  const lenisRef = useRef(null);
 
   // smooth inertia for mouse wheel / trackpad (touch keeps native scrolling)
   useEffect(() => {
@@ -19,11 +20,21 @@ export default function SmoothScroll() {
       anchors: true,
       prevent: (node) => !!node.closest?.(".mm, .lb-back, .mobile-nav"),
     });
+    lenisRef.current = lenis;
     let raf;
     const loop = (t) => { lenis.raf(t); raf = requestAnimationFrame(loop); };
     raf = requestAnimationFrame(loop);
-    return () => { cancelAnimationFrame(raf); lenis.destroy(); };
+    return () => { cancelAnimationFrame(raf); lenis.destroy(); lenisRef.current = null; };
   }, []);
+
+  // every page change starts at the top (Lenis keeps its own scroll position, so reset it explicitly)
+  useEffect(() => {
+    try { window.history.scrollRestoration = "manual"; } catch {}
+    if (window.location.hash) return;
+    const l = lenisRef.current;
+    if (l) { l.resize(); l.scrollTo(0, { immediate: true, force: true }); }
+    window.scrollTo(0, 0);
+  }, [path]);
 
   // fade-up reveal; re-run on every page change
   useEffect(() => {

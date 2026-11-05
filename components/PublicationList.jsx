@@ -56,10 +56,14 @@ export default function PublicationList({ pubs, topics, piName, patents = [] }) 
   }, [current, filter, q]);
 
   const byYear = useMemo(() => {
+    if (filter === "Selected") {
+      // lead-author papers (first, co-first, corresponding) on top, then co-author papers
+      return [["Lead", rows.filter((p) => p.lead)], ["Co-author", rows.filter((p) => !p.lead)]].filter(([, l]) => l.length);
+    }
     const m = new Map();
     for (const p of rows) (m.get(p.year) ?? m.set(p.year, []).get(p.year)).push(p);
     return [...m.entries()].sort((a, b) => b[0] - a[0]);
-  }, [rows]);
+  }, [rows, filter]);
 
   const chips = [
     { id: "All", label: "All" },
@@ -135,6 +139,9 @@ export default function PublicationList({ pubs, topics, piName, patents = [] }) 
           <>
             {anyMark && (
               <p className="pub-note"><b className="pi-mark">*</b> Corresponding author &nbsp; <b className="pi-mark">#</b> Co-first author</p>
+            )}
+            {filter === "Selected" && (
+              <p className="pub-note">Lead = first, co-first or corresponding author</p>
             )}
             {byYear.length === 0 && <p className="muted">No publications match.</p>}
             {byYear.map(([year, list]) => (
