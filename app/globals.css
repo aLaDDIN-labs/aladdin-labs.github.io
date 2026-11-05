@@ -490,3 +490,29 @@ html[data-lang="ko"] .en-only { display: none; }
 .mm-focus h4 { margin: 0 0 6px; color: var(--orange-ink); font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
 .mm-focus ul { margin: 0; padding-left: 18px; font-size: .93rem; line-height: 1.5; }
 .mm-focus li { margin: 3px 0; }
+
+/* ---- Philosophy: statement layout (large key lines, faint background art) ---- */
+.pv { background: #fff; }
+.pv-sec { position: relative; overflow: hidden; padding: clamp(64px, 9vw, 120px) 0; border-top: 1px solid var(--line); }
+.pv-in { position: relative; z-index: 1; }
+.pv-label { margin: 0 0 18px; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: var(--orange-ink); }
+.pv-label span { display: inline-block; min-width: 2.2em; margin-right: 10px; font-weight: 300; font-size: 1.3em; letter-spacing: -.02em; vertical-align: -2px; }
+.pv-big { margin: 0 0 22px; max-width: 20ch; font-size: clamp(2rem, 4.8vw, 3.9rem); font-weight: 300; line-height: 1.08; letter-spacing: -.04em; color: var(--ink); }
+.pv-big em { font-style: normal; font-weight: 700; background: linear-gradient(transparent 62%, rgba(255,170,60,.38) 62%); }
+.pv-big-joy { max-width: 22ch; }
+.pv-body { margin: 0; max-width: 52ch; font-size: clamp(1.02rem, 1.4vw, 1.2rem); line-height: 1.6; color: #3a3d44; }
+.pv-flow { list-style: none; margin: 30px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 8px; }
+.pv-flow li { padding: 9px 18px; border-radius: 999px; background: #f5f5f5; font-size: .95rem; font-weight: 600; color: var(--ink); }
+.pv-flow li + li::before { content: "\2192"; margin-right: 12px; color: var(--orange-ink); font-weight: 400; }
+.pv-bg { position: absolute; top: 0; bottom: 0; width: min(62%, 860px); background-repeat: no-repeat; background-size: cover; opacity: .34; pointer-events: none; }
+.bg-left .pv-bg { right: 0; background-position: center; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 55%); mask-image: linear-gradient(90deg, transparent 0, #000 55%); }
+.bg-right .pv-bg { right: 0; background-position: left center; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 45%); mask-image: linear-gradient(90deg, transparent 0, #000 45%); opacity: .5; }
+.pv-joy { background: #fbf8f2; }
+@media (max-width: 720px) {
+  .pv-bg { width: 100%; opacity: .16; }
+  .bg-left .pv-bg, .bg-right .pv-bg { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 70%); mask-image: linear-gradient(180deg, transparent 0, #000 70%); }
+  .pv-label span { display: block; }
+}
+
+.bg-land .pv-bg { right: 0; width: min(50%, 700px); background-position: center; opacity: .42; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 40%), linear-gradient(0deg, transparent 0, #000 25%); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0, #000 40%), linear-gradient(0deg, transparent 0, #000 25%); mask-composite: intersect; }
+@media (max-width: 720px) { .bg-land .pv-bg { width: 100%; opacity: .14; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 70%); mask-image: linear-gradient(180deg, transparent 0, #000 70%); } }

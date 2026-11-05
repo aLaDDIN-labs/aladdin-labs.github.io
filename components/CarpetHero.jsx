@@ -69,7 +69,7 @@ export default function CarpetHero() {
           <strong><span className="hl">The Magic Carpet Ride Across Chemical Space</span></strong>
         </h1>
         <p className="phil-sub">
-          Navigating the infinite molecular cosmos to bridge atomic dynamics and human neural circuits.
+          Navigating the infinite molecular cosmos to connect atomic dynamics with biological function.
         </p>
       </div>
     </section>
