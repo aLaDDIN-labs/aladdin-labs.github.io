@@ -5,19 +5,17 @@
 # To add a person, copy a block, change the fields, and add the photo.
 
 # ---------------- Current ----------------
-- id: jiwoo-kim
+- id: jeewoo-kim
   group: current
-  name: { en: Jiwoo Kim }
+  name: { en: Jeewoo Kim }
   role: { en: PhD student }
   position: { en: "KRICT · Chungnam National University (CNU)" }
-  photo: /images/team/jiwoo-kim.webp
+  photo: /images/team/jeewoo-kim.webp
   education:
     - { years: "2023.03–Present", text: "PhD student, Graduate School of New Drug Discovery and Development, Chungnam National University" }
     - { years: "2021.03–2023.02", text: "MS, College of Pharmacy, Chungnam National University" }
   links:
     email: jeewoo36@krict.re.kr
-  focus:
-    - { en: "Computational and structural approach for targeting undruggable targets" }
 
 - id: quoc-phuong-nguyen
   group: current
@@ -29,9 +27,6 @@
     - { years: "2023.08–Present", text: "PhD student, University of Science and Technology (UST) (on leave of absence)" }
   links:
     email: quocphuongng@gmail.com
-  focus:
-    - { en: "Biophysical and structural analysis of ASD mutant proteins" }
-    - { en: "Structural insights into RNA acetylation erasers" }
 
 - id: yujin-kwon
   group: current
@@ -43,23 +38,16 @@
     - { years: "2025.03–Present", text: "MS-PhD course, University of Science and Technology (UST)" }
   links:
     email: kyj0119@krict.re.kr
-  focus_label: "Focused questions"
-  focus:
-    - { en: "How can we explore novel chemical space in molecular glue discovery (beyond the cyclic imide)?" }
-    - { en: "Understanding the natural language of cellular protein–protein interaction networks" }
 
 - id: dahyun-kang
   group: current
   name: { en: Dahyun Kang }
   role: { en: PhD student }
   position: { en: "Sungkyunkwan University (SKKU) · KRICT" }
-  # currently in Prof. Gayoung Jung's lab, College of Pharmacy, SKKU
   education:
     - { years: "2024.09–Present", text: "PhD student, Sungkyunkwan University" }
   links:
     email: ganda525@krict.re.kr
-  focus:
-    - { en: "Structural and pharmacological discrimination of biased signaling pathways involved in neuroprotection in AD pathology" }
 
 - id: nayeon-kim
   group: current
@@ -76,22 +64,13 @@
     email: knyeon@krict.re.kr
 
 # ---------------- Alumni (newest first) ----------------
-  focus:
-    - { en: "Development of novel ATTEC platform" }
-    - { en: "Development of novel ATTEC molecules" }
-    - { en: "Identification of novel binders of undruggable targets via DEL (DNA-encoded library) screening" }
-    - { en: "Computational analysis of kinase conformational changes with designed inhibitors" }
-
 - id: daeun-lim
   group: alumni
   name: { en: Daeun Lim }
   role: { en: UST intern }
-  now: { en: "PhD student, Center for Synaptic Brain Dysfunction, IBS" }
+  now: { en: "MCP" }
   career:
     - { years: "Joined 2025.07", text: "UST internship, ALADDIN Lab" }
-  focus_label: "Focused projects at ALADDIN"
-  focus:
-    - { en: "Serotonin circuits in ASD" }
 
 - id: hyunkyung-lim
   group: alumni
@@ -108,21 +87,14 @@
   now: { en: "Senior Researcher, SC BIO" }
   career:
     - { years: "Joined 2024.03", text: "Internship, ALADDIN Lab" }
-  focus_label: "Focused projects at ALADDIN"
-  focus:
-    - { en: "Development of a neuroprogenitor cell-based disease model for SCA1" }
 
 - id: minseong-kang
   group: alumni
-  name: { en: MinSoung Kang }
+  name: { en: Minseong Kang }
   role: { en: Postdoctoral researcher }
-  now: { en: "Postdoctoral researcher, Structural Biology Lab (GLAMP), Gyeongsang National University" }
+  now: { en: "Postdoctoral researcher, KNU" }
   career:
     - { years: "Joined 2022.09", text: "Postdoctoral researcher, ALADDIN Lab" }
-  focus_label: "Focused projects at ALADDIN"
-  focus:
-    - { en: "Structural insights into NMPylation" }
-    - { en: "Development of a PPI inhibition monitoring system for SCA1 treatment" }
 
 - id: hyunji-oh
   group: alumni
@@ -131,18 +103,12 @@
   now: { en: "Senior Researcher, SC BIO" }
   career:
     - { years: "Joined 2020.03", text: "MS student, ALADDIN Lab" }
-  focus_label: "Focused projects at ALADDIN"
-  focus:
-    - { en: "CADD to identify novel USP7 inhibitors for glioblastoma treatment" }
 
 - id: hanra-song
   group: alumni
   name: { en: Hanra Song }
   role: { en: Intern }
   now: { en: "Samsung" }
-  focus_label: "Focused projects at ALADDIN"
-  focus:
-    - { en: "Structural insights into therapeutic approaches for COVID-19" }
 
 - id: yeji-kim
   group: alumni

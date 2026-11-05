@@ -100,12 +100,7 @@ export default function TeamBrowser({ people, base = "" }) {
               <p className="mm-role">{txt(cur.role)}</p>
               {cur.position && <p className="mm-pos">{txt(cur.position)}</p>}
               {cur.now && <p className="mm-now"><span>Now</span>{txt(cur.now)}</p>}
-              {cur.focus?.length > 0 && (
-                <div className="mm-focus">
-                  <h4>{cur.focus_label || "Focused projects"}</h4>
-                  <ul>{[].concat(cur.focus).map((f, i) => <li key={i}>{txt(f)}</li>)}</ul>
-                </div>
-              )}
+              {cur.focus && <p className="mm-now"><span>Focus</span>{txt(cur.focus)}</p>}
               {cur.bio && <p className="mm-bio">{txt(cur.bio)}</p>}
               <Row title="Career" items={cur.career} />
               <Row title="Education" items={cur.education} />
