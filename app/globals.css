@@ -516,3 +516,7 @@ html[data-lang="ko"] .en-only { display: none; }
 
 .bg-land .pv-bg { right: 0; width: min(50%, 700px); background-position: center; opacity: .42; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 40%), linear-gradient(0deg, transparent 0, #000 25%); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0, #000 40%), linear-gradient(0deg, transparent 0, #000 25%); mask-composite: intersect; }
 @media (max-width: 720px) { .bg-land .pv-bg { width: 100%; opacity: .14; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 70%); mask-image: linear-gradient(180deg, transparent 0, #000 70%); } }
+
+@keyframes rvLoad { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+.rv-load { animation: rvLoad .9s cubic-bezier(.16,1,.3,1) both; animation-delay: var(--rv-delay, 0ms); }
+@media (prefers-reduced-motion: reduce) { .rv-load { animation: none; } }
