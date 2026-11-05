@@ -25,10 +25,10 @@ export default function Footer({ site }) {
           <ul className="plain">
             <li><Link href="/research/"><L en="Research" ko="연구" /></Link></li>
             <li><Link href="/philosophy/"><L en="Philosophy" ko="철학" /></Link></li>
+            <li><Link href="/team/"><L en="Members" ko="구성원" /></Link></li>
             <li><Link href="/publications/"><L en="Publications" ko="논문" /></Link></li>
             <li><Link href="/news/"><L en="News" ko="소식" /></Link></li>
             <li><Link href="/outreach/"><L en="Outreach" ko="아웃리치" /></Link></li>
-            <li><Link href="/team/"><L en="Members" ko="구성원" /></Link></li>
             <li><Link href="/join/"><L en="Join the lab" ko="합류하기" /></Link></li>
           </ul>
         </div>
