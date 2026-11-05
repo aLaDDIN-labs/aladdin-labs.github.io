@@ -27,13 +27,24 @@ export default function SmoothScroll() {
     return () => { cancelAnimationFrame(raf); lenis.destroy(); lenisRef.current = null; };
   }, []);
 
-  // every page change starts at the top (Lenis keeps its own scroll position, so reset it explicitly)
+  // every page change starts at the top. Lenis keeps its own scroll position and CSS `scroll-behavior: smooth`
+  // would animate window.scrollTo, so reset instantly and repeat briefly to beat Next's own scroll handling.
   useEffect(() => {
     try { window.history.scrollRestoration = "manual"; } catch {}
     if (window.location.hash) return;
-    const l = lenisRef.current;
-    if (l) { l.resize(); l.scrollTo(0, { immediate: true, force: true }); }
-    window.scrollTo(0, 0);
+    const root = document.documentElement;
+    const top = () => {
+      const prev = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      const l = lenisRef.current;
+      if (l) { l.resize(); l.scrollTo(0, { immediate: true, force: true }); }
+      window.scrollTo(0, 0);
+      root.style.scrollBehavior = prev;
+    };
+    top();
+    const raf = requestAnimationFrame(top);
+    const t1 = setTimeout(top, 120), t2 = setTimeout(top, 400);
+    return () => { cancelAnimationFrame(raf); clearTimeout(t1); clearTimeout(t2); };
   }, [path]);
 
   // fade-up reveal; re-run on every page change

@@ -9,7 +9,6 @@ export default function Home() {
   const research = getResearch();
   const selected = getPublications()
     .filter((p) => p.selected && p.type !== "preprint")
-    .sort((a, b) => (b.lead - a.lead) || (b.year - a.year))   // first / co-first / corresponding author papers first
     .slice(0, 4);
   const team = getTeam().filter((m) => m.group === "pi" || m.group === "current" || m.group === "member");
   const news = getNews().slice(0, 4);
