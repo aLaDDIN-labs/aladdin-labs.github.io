@@ -80,6 +80,7 @@ export default function TeamBrowser({ people, base = "" }) {
                   </span>
                   <span className="pname">{txt(m.name)}</span>
                   <span className="prole">{txt(m.role)}</span>
+                  {m.now && <span className="pnow">{txt(m.now)}</span>}
                 </button>
               </li>
             ))}
@@ -98,6 +99,13 @@ export default function TeamBrowser({ people, base = "" }) {
               <h3>{txt(cur.name)}</h3>
               <p className="mm-role">{txt(cur.role)}</p>
               {cur.position && <p className="mm-pos">{txt(cur.position)}</p>}
+              {cur.now && <p className="mm-now"><span>Now</span>{txt(cur.now)}</p>}
+              {cur.focus?.length > 0 && (
+                <div className="mm-focus">
+                  <h4>{cur.focus_label || "Focused projects"}</h4>
+                  <ul>{[].concat(cur.focus).map((f, i) => <li key={i}>{txt(f)}</li>)}</ul>
+                </div>
+              )}
               {cur.bio && <p className="mm-bio">{txt(cur.bio)}</p>}
               <Row title="Career" items={cur.career} />
               <Row title="Education" items={cur.education} />
