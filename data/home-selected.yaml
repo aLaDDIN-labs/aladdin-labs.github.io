@@ -1,0 +1,12 @@
+# Papers shown under "Selected papers" on the Home page, in this order (newest first).
+# Each line is a fragment of the paper title (case-insensitive). Add / remove / reorder lines freely.
+# The "Selected" filter on the Publications page is separate (journal rules in selected-rules.yaml).
+titles:
+  - "Adult restoration of Shank2"
+  - "Early postnatal serotonin modulation"
+  - "Sequence preference and structural heterogeneity of BZ junctions"
+  - "Modulation of Neurexin-Neuroligin"
+  - "LAR-RPTP/Slitrk complex"
+  - "Distinct Z-DNA binding mode of a PKR-like"
+  - "Intrinsic Z-DNA Is Stabilized"
+  - "Base extrusion is found at helical junctions"

@@ -2,14 +2,17 @@ import Authors from "../components/Authors";
 import Link from "next/link";
 import MoleculeField from "../components/MoleculeField";
 import { L, T } from "../components/L";
-import { getSite, getResearch, getPublications, getTeam, getNews } from "../lib/data";
+import { getSite, getResearch, getPublications, getTeam, getNews, getHomeSelected } from "../lib/data";
 
 export default function Home() {
   const site = getSite();
   const research = getResearch();
-  const selected = getPublications()
-    .filter((p) => p.selected && p.type !== "preprint")
-    .slice(0, 4);
+  // Home "Selected papers": hand-picked list in data/home-selected.yaml (title fragments, in display order)
+  const allPubs = getPublications();
+  const picks = getHomeSelected();
+  const selected = picks.length
+    ? picks.map((t) => allPubs.find((p) => p.title.toLowerCase().includes(t.toLowerCase()))).filter(Boolean)
+    : allPubs.filter((p) => p.selected && p.type !== "preprint").slice(0, 4);
   const team = getTeam().filter((m) => m.group === "pi" || m.group === "current" || m.group === "member");
   const news = getNews().slice(0, 4);
   const recent = getPublications().filter((p) => p.type !== "preprint").slice(0, 4);
