@@ -22,7 +22,7 @@ function ServerIcon({ cy = -17, s = 0.8 }) {
   );
 }
 
-export default function ToolsBrowser({ stages, tools, workflows }) {
+export default function ToolsBrowser({ stages, tools, workflows, intro }) {
   const byId = useMemo(() => Object.fromEntries(tools.map((t) => [t.id, t])), [tools]);
   const [cur, setCur] = useState(0);
   const [full, setFull] = useState(false);
@@ -133,7 +133,9 @@ export default function ToolsBrowser({ stages, tools, workflows }) {
 
   return (
     <>
-      <section className="tl-map container" aria-label="Workflow map">
+      <section className="tl-band" aria-label="Workflow map">
+       <div className="container tl-map">
+        {intro}
         <svg
           ref={svgRef}
           className="tl-svg"
@@ -232,6 +234,7 @@ export default function ToolsBrowser({ stages, tools, workflows }) {
           </span>
           <button type="button" className="tl-show" onClick={showWorkflow}>Show these tools below ↓</button>
         </div>
+       </div>
       </section>
 
       <section className="tl-body container" id="tool-cards">

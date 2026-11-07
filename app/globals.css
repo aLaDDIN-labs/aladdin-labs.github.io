@@ -522,8 +522,14 @@ html[data-lang="ko"] .en-only { display: none; }
 @media (prefers-reduced-motion: reduce) { .rv-load { animation: none; } }
 
 /* ---- Tools page ---- */
-.tl-map { padding-bottom: 8px; }
-.tl-svg { display: block; width: 100%; height: auto; border-radius: 16px; background: #FBF7EC; touch-action: pan-y; }
+.tl-band { background: #FAF6EB; border-bottom: 1px solid var(--line); padding: 26px 0 34px; }
+.tl-intro { text-align: center; padding: 0 0 6px; }
+.tl-intro .eyebrow { margin: 0 0 4px; }
+.tl-intro .team-title { font-size: clamp(2rem, 4vw, 3.4rem); }
+.tl-lede { margin: 10px auto 0; max-width: 46ch; color: var(--body); font-size: 1rem; }
+.tl-svg { display: block; width: 100%; height: auto; background: #FAF6EB; touch-action: pan-y;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 36px, #000 calc(100% - 28px), transparent 100%), linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(to bottom, transparent 0, #000 36px, #000 calc(100% - 28px), transparent 100%), linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%); mask-composite: intersect; }
 .tl-nd { cursor: pointer; outline: none; }
 .tl-nd:focus-visible text { text-decoration: underline; }
 .tl-pg { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 14px; }
