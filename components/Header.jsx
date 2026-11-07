@@ -7,6 +7,7 @@ const nav = [
   { href: "/philosophy/", en: "Philosophy", ko: "철학" },
   { href: "/team/", en: "Members", ko: "구성원" },
   { href: "/publications/", en: "Publications", ko: "논문" },
+  { href: "/tools/", en: "Tools", ko: "도구" },
   { href: "/news/", en: "News", ko: "소식" },
   { href: "/outreach/", en: "Outreach", ko: "아웃리치" },
   { href: "/join/", en: "Join", ko: "합류" },

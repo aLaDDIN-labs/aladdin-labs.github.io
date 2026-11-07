@@ -1,0 +1,83 @@
+# Lab tools shown on the Tools page (map + cards).
+# Edit freely: every tool is one entry.
+#   url:   where the card links to (your own web tool or the original site). Leave "" while it is not ready:
+#          the card then shows "Link coming soon" and is not clickable.
+#   kind:  web    = runs as a static page in the browser
+#          server = runs on the lab server (internal)
+#   stage: 0-5, which map region the tool sits in (see `stages`)
+#   map:   [x, y] position of the pin on the map image (1376 x 768); add `label: right` to put the name on the right
+#   tags:  free words; they become the search/filter chips automatically
+stages:
+  - { name: "Structure",     color: "#8F6CC0", dark: "#4F3A80" }
+  - { name: "Screening",     color: "#7C9B46", dark: "#3F5A1E" }
+  - { name: "Chemistry",     color: "#E07B4F", dark: "#8F3A1B" }
+  - { name: "Assay and SAR", color: "#E8B040", dark: "#8A5E0A" }
+  - { name: "X-ray",         color: "#D9577F", dark: "#8F2A4C" }
+  - { name: "Cryo-EM",       color: "#4C8FC9", dark: "#1B5389" }
+
+tools:
+  - { id: pdb,    name: "PDB viewer",  stage: 0, kind: web,    map: [245, 238], url: "", tags: [Structure, Visualization],
+      desc: "Open and inspect protein and complex structures in the browser." }
+  - { id: seq,    name: "Seq / conc",  stage: 0, kind: web,    map: [175, 310], url: "", tags: [Protein, Calculator],
+      desc: "Sequence properties and protein concentration (MW, extinction coefficient, pI)." }
+  - { id: boltz,  name: "Boltz",       stage: 0, kind: server, map: [95, 318],  url: "", tags: [Structure, AI, Prediction],
+      desc: "Predict protein and protein-ligand complex structures." }
+
+  - { id: mol,    name: "Mol editor",  stage: 1, kind: web,    map: [360, 290], url: "", tags: [Cheminformatics, Visualization],
+      desc: "Draw and edit molecules and export SMILES for the screening tools." }
+  - { id: lbvs,   name: "LBVS",        stage: 1, kind: server, map: [445, 345], url: "", tags: [Screening, Cheminformatics],
+      desc: "Ligand-based virtual screening by similarity to known binders." }
+  - { id: sbvs,   name: "SBVS",        stage: 1, kind: server, map: [515, 300], url: "", tags: [Screening, Docking],
+      desc: "Structure-based virtual screening by docking into a target pocket." }
+
+  - { id: prop,   name: "Properties",  stage: 2, kind: web,    map: [835, 258], url: "", tags: [Cheminformatics, ADMET],
+      desc: "Physicochemical properties of a compound (MW, logP, TPSA, HBD/HBA)." }
+  - { id: admet,  name: "ADMET-AI",    stage: 2, kind: server, map: [655, 280], url: "", tags: [ADMET, AI],
+      desc: "Predict ADMET endpoints for candidate compounds." }
+  - { id: sa,     name: "SA score",    stage: 2, kind: web,    map: [745, 262], url: "", tags: [Synthesis, Cheminformatics],
+      desc: "Synthetic accessibility score of a molecule." }
+  - { id: retro,  name: "Retrosyn",    stage: 2, kind: server, map: [640, 335], url: "", tags: [Synthesis, AI],
+      desc: "Retrosynthesis route suggestions for a target compound." }
+  - { id: buy,    name: "Buyable",     stage: 2, kind: web,    map: [720, 338], url: "", tags: [Synthesis, Sourcing],
+      desc: "Check whether a compound or building block can be purchased." }
+  - { id: rxn,    name: "Rxn calc",    stage: 2, kind: web,    map: [815, 335], url: "", tags: [Synthesis, Calculator],
+      desc: "Reaction stoichiometry and scale-up calculator." }
+
+  - { id: bli,    name: "BLI fit",     stage: 3, kind: web,    map: [975, 270], url: "", tags: [Biophysics, Data fitting],
+      desc: "Fit biolayer interferometry sensorgrams (kon, koff, KD)." }
+  - { id: ic50,   name: "IC50 fit",    stage: 3, kind: web,    map: [1080, 262], url: "", tags: [Assay, Data fitting],
+      desc: "Dose-response curve fitting and IC50 estimation." }
+  - { id: sar,    name: "SAR table",   stage: 3, kind: web,    map: [1030, 330], url: "", tags: [SAR, Cheminformatics],
+      desc: "Structure-activity table that links compounds to measured values." }
+
+  - { id: xtal,   name: "Xtal screen", stage: 4, kind: web,    map: [575, 525], url: "", tags: [Crystallography],
+      desc: "Plan and track crystallization screens." }
+  - { id: proc,   name: "Data proc",   stage: 4, kind: server, map: [640, 625], url: "", tags: [Crystallography, Data processing],
+      desc: "Index, integrate and scale diffraction data." }
+  - { id: phase,  name: "Phasing",     stage: 4, kind: server, map: [880, 628], url: "", tags: [Crystallography],
+      desc: "Molecular replacement and phasing." }
+  - { id: refine, name: "Refine",      stage: 4, kind: server, map: [970, 575], url: "", tags: [Crystallography],
+      desc: "Model building and refinement." }
+  - { id: valid,  name: "Validate",    stage: 4, kind: web,    map: [925, 505], url: "", tags: [Crystallography, Validation],
+      desc: "Check model geometry and fit before deposition." }
+
+  - { id: prep,   name: "Preproc",     stage: 5, kind: server, map: [1215, 452], label: right, url: "", tags: [Cryo-EM, Data processing],
+      desc: "Motion correction and CTF estimation." }
+  - { id: pick,   name: "Picking",     stage: 5, kind: server, map: [1250, 505], label: right, url: "", tags: [Cryo-EM],
+      desc: "Particle picking from micrographs." }
+  - { id: cls,    name: "2D class",    stage: 5, kind: server, map: [1265, 558], label: right, url: "", tags: [Cryo-EM],
+      desc: "2D classification of picked particles." }
+  - { id: ref3,   name: "3D refine",   stage: 5, kind: server, map: [1250, 665], url: "", tags: [Cryo-EM],
+      desc: "3D classification and refinement to a map." }
+  - { id: emap,   name: "Map viewer",  stage: 5, kind: web,    map: [1135, 645], url: "", tags: [Cryo-EM, Visualization],
+      desc: "View cryo-EM density maps and fitted models." }
+
+# Workflows shown by the arrows on the map (step order).
+workflows:
+  - { name: "Virtual screening",       sub: "Design, dock, filter ADMET, source compounds",         tools: [mol, sbvs, admet, buy] }
+  - { name: "Ligand-based screening",  sub: "Similarity search, properties, synthetic accessibility", tools: [mol, lbvs, prop, sa] }
+  - { name: "Synthesis planning",      sub: "Accessibility, retrosynthesis, sourcing, scale-up",     tools: [sa, retro, buy, rxn] }
+  - { name: "Structure first",         sub: "Inspect, predict, dock",                                tools: [pdb, boltz, sbvs] }
+  - { name: "Validation",              sub: "Binding, IC50, SAR",                                    tools: [bli, ic50, sar] }
+  - { name: "X-ray crystallography",   sub: "Crystallize, process, phase, refine, validate",         tools: [xtal, proc, phase, refine, valid] }
+  - { name: "Cryo-EM",                 sub: "Preprocess, pick, classify, refine, view map",          tools: [prep, pick, cls, ref3, emap] }
