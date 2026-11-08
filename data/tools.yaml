@@ -26,7 +26,7 @@ tools:
   - { id: boltz,  name: "Boltz-2",     stage: 0, kind: external, local: true, map: [95, 318],  url: "https://build.nvidia.com/mit/boltz2", tags: [Structure, AI, Prediction],
       desc: "Predict protein and protein-ligand complex structures." }
 
-  - { id: mol,    name: "Mol editor",  stage: 1, kind: web,    map: [360, 290], url: "", tags: [Cheminformatics, Visualization],
+  - { id: mol,    name: "Mol editor",  stage: 1, kind: web,    map: [360, 290], url: "/tools/mol-editor/", tags: [Cheminformatics, Visualization],
       desc: "Draw and edit molecules and export SMILES for the screening tools." }
   - { id: lbvs,   name: "LBVS",        stage: 1, kind: external, local: true, map: [445, 345], url: "", tags: [Screening, Cheminformatics],
       desc: "Ligand-based virtual screening by similarity to known binders." }

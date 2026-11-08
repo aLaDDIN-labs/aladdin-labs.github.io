@@ -700,3 +700,16 @@ a.tl-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,
 .tl-local { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; color: #4F3A80; }
 .tl-local::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: #8F6CC0; }
 .tl-kind.inhouse { background: #FCEFD2; color: #8A5E0A; }
+
+/* Mol editor */
+.me-edit { flex: 1 1 640px; min-width: 0; }
+.me-host { position: relative; height: 560px; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: #fff; }
+.me-side { flex: 0 1 380px; min-width: 280px; }
+.me-smiles { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .82rem; background: #FAF6EB; border: 1px solid #EEE6CF; border-radius: 12px; padding: 10px 12px; word-break: break-all; min-height: 20px; line-height: 1.45; }
+.me-smiles span { color: var(--muted); font-family: inherit; }
+.me-props { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; font-size: .85rem; color: var(--muted); }
+.me-props b { color: var(--ink); font-weight: 600; margin-left: 6px; }
+.me-flag { margin: 0; font-size: .8rem; padding: 8px 12px; border-radius: 10px; line-height: 1.45; }
+.me-flag.ok { background: #E6F4EE; color: #0F6E56; }
+.me-flag.warn { background: #FFF6E0; color: #8A5E0A; }
+.me-mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .8rem; word-break: break-all; }
