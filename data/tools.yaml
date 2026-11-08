@@ -28,6 +28,8 @@ tools:
 
   - { id: mol,    name: "Mol editor",  stage: 1, kind: web,    map: [360, 290], url: "/tools/mol-editor/", tags: [Cheminformatics, Visualization],
       desc: "Draw and edit molecules and export SMILES for the screening tools." }
+  - { id: lib,    name: "Library map", stage: 1, kind: web,    map: [450, 250], url: "/tools/library/", tags: [Cheminformatics, Clustering, Visualization],
+      desc: "Upload a compound library, see its properties, and explore clusters on a clickable map." }
   - { id: lbvs,   name: "LBVS",        stage: 1, kind: external, local: true, map: [445, 345], url: "", tags: [Screening, Cheminformatics],
       desc: "Ligand-based virtual screening by similarity to known binders." }
   - { id: sbvs,   name: "SBVS",        stage: 1, kind: external, local: true, map: [515, 300], url: "", tags: [Screening, Docking],
@@ -78,7 +80,7 @@ tools:
 # Workflows shown by the arrows on the map (step order).
 workflows:
   - { name: "Virtual screening",       sub: "Design, dock, filter ADMET, source compounds",         tools: [mol, sbvs, admet, buy] }
-  - { name: "Ligand-based screening",  sub: "Similarity search, properties, synthetic accessibility", tools: [mol, lbvs, prop, sa] }
+  - { name: "Ligand-based screening",  sub: "Similarity search, properties, synthetic accessibility", tools: [mol, lib, lbvs, prop, sa] }
   - { name: "Synthesis planning",      sub: "Accessibility, retrosynthesis, sourcing, scale-up",     tools: [sa, retro, buy, rxn] }
   - { name: "Structure first",         sub: "Inspect, predict, dock",                                tools: [pdb, boltz, sbvs] }
   - { name: "Protein design",           sub: "Generate a binder, predict the complex, inspect",       tools: [rfd4, boltz, pdb] }
