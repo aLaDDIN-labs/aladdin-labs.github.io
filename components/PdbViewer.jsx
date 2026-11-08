@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ligand2D, parsePDBQT, parseSDF, isLigandPDBQT, toPDBLines } from "../lib/ligand2d";
 import { CHAIN_COLORS, chainColor, contactMapSVG, findContacts, findLigands, illustize, isHydrophobic } from "../lib/pdbtools";
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH || "";
@@ -17,7 +18,9 @@ export default function PdbViewer() {
   const stage = useRef(null);
   const viewer = useRef(null);
   const $3D = useRef(null);
-  const raw = useRef({ data: "", fmt: "pdb" });
+  const raw = useRef({ models: [] });
+  const ligInfo = useRef(new Map());
+  const ligNames = useRef(new Map());
   const atoms = useRef([]);
   const [input, setInput] = useState("1HSG");
   const [status, setStatus] = useState("idle");
@@ -37,10 +40,36 @@ export default function PdbViewer() {
   const [chains, setChains] = useState([]);
   const [dlg, setDlg] = useState(false);
   const [tick, setTick] = useState(0);
+  const [smilesMap, setSmilesMap] = useState({});
+  const [smilesIn, setSmilesIn] = useState("");
+  const [l2d, setL2d] = useState(null);
+  const [l2dErr, setL2dErr] = useState("");
 
   const lig = useMemo(() => ligands.find((l) => l.key === ligKey), [ligands, ligKey]);
   const contacts = useMemo(() => (lig ? findContacts(atoms.current, lig, cutoff) : []), [lig, cutoff, tick]);
-  const svg = useMemo(() => (lig ? contactMapSVG(lig, contacts, chains, `${lig.resn} ${lig.chain}${lig.resi} · ${info?.id || ""}`) : ""), [lig, contacts, chains, info]);
+  const svg = useMemo(() => (lig ? contactMapSVG(lig, contacts, chains, `${lig.resn} ${lig.chain}${lig.resi} · ${info?.id || ""}`, l2d, atoms.current) : ""), [lig, contacts, chains, info, l2d]);
+
+  // 2D structure of the chosen ligand (RDKit-JS, loaded on demand)
+  useEffect(() => {
+    setL2d(null); setL2dErr("");
+    if (!lig) return;
+    let dead = false;
+    (async () => {
+      try {
+        let smi = smilesMap[lig.key];
+        if (!smi && info?.source === "rcsb" && !ligInfo.current.has(lig.key)) {
+          try {
+            const d = await (await fetch(`https://data.rcsb.org/rest/v1/core/chemcomp/${lig.resn}`)).json();
+            const ds = d.rcsb_chem_comp_descriptor || {};
+            smi = ds.smiles || ds.SMILES || ds.smilesstereo || "";
+          } catch {}
+        }
+        const r = await ligand2D(lig, ligInfo.current.get(lig.key), smi);
+        if (!dead) setL2d(r);
+      } catch (e) { if (!dead) setL2dErr(e.message || String(e)); }
+    })();
+    return () => { dead = true; };
+  }, [lig, smilesMap]);
 
   // ---------- scene ----------
   const build = useCallback((v, T) => {
@@ -89,11 +118,13 @@ export default function PdbViewer() {
 
   useEffect(() => { if (viewer.current && status === "ready") { build(viewer.current, $3D.current); viewer.current.render(); } }, [build, status]);
 
-  async function ingest(data, fmt, meta) {
+  async function ingest(models, meta, append = false) {
     const v = viewer.current;
-    v.clear(); v.addModel(data, fmt);
-    raw.current = { data, fmt };
-    atoms.current = v.getModel().selectedAtoms({});
+    v.clear();
+    const all = append ? [...raw.current.models, ...models] : models;
+    for (const m of all) v.addModel(m.data, m.fmt);
+    raw.current = { models: all };
+    atoms.current = v.selectedAtoms({});
     const ch = [...new Set(atoms.current.filter((a) => !a.hetflag).map((a) => a.chain))];
     setChains(ch);
     const ls = findLigands(atoms.current);
@@ -120,18 +151,38 @@ export default function PdbViewer() {
       } catch {}
       setInput(clean);
       try { history.replaceState(null, "", `#${clean}`); } catch {}
-      await ingest(data, fmt, meta);
+      ligInfo.current = new Map(); ligNames.current = new Map(); setSmilesMap({});
+      await ingest([{ data, fmt }], { ...meta, source: "rcsb" });
     } catch (e) { setErr(e.message || String(e)); setStatus(atoms.current.length ? "ready" : "idle"); }
   }
 
-  function onFile(e) {
-    const f = e.target.files?.[0]; if (!f) return;
-    const ext = f.name.split(".").pop().toLowerCase();
-    const fmt = ext === "cif" || ext === "mmcif" ? "cif" : "pdb";
-    const rd = new FileReader();
-    rd.onload = () => { setErr(""); setStatus("loading"); ingest(String(rd.result), fmt, { id: f.name.replace(/\.[^.]+$/, ""), title: f.name, sub: "Uploaded file" }); };
-    rd.readAsText(f);
-    e.target.value = "";
+  async function onFiles(e) {
+    const files = [...(e.target.files || [])]; e.target.value = "";
+    if (!files.length) return;
+    try {
+      setErr(""); setStatus("loading");
+      const structs = [], ligs = [];
+      for (const f of files) {
+        const ext = f.name.split(".").pop().toLowerCase(); const text = await f.text();
+        if (ext === "sdf" || ext === "mol") ligs.push({ f, info: parseSDF(text) });
+        else if (ext === "pdbqt") { if (isLigandPDBQT(text)) ligs.push({ f, info: parsePDBQT(text) }); else structs.push({ f, data: text.split("\n").filter((l) => /^(ATOM|HETATM)/.test(l)).map((l) => l.slice(0, 66).padEnd(66) + "          " + (l.slice(77).trim() ? ({ A: "C", OA: "O", NA: "N", SA: "S" }[l.slice(77).trim()] || l.slice(77).trim()) : "C").padStart(2)).join("\n"), fmt: "pdb" }); }
+        else if (["pdb", "ent", "cif", "mmcif"].includes(ext)) structs.push({ f, data: text, fmt: ext === "cif" || ext === "mmcif" ? "cif" : "pdb" });
+        else throw new Error(`${f.name}: unsupported file type. Use .pdb, .cif, .mmcif for structures and .sdf, .mol, .pdbqt for ligands.`);
+      }
+      const append = !structs.length && atoms.current.length > 0;
+      if (!append) { ligInfo.current = new Map(); ligNames.current = new Map(); setSmilesMap({}); }
+      const models = structs.map((x) => ({ data: x.data, fmt: x.fmt }));
+      const base = append ? findLigands(atoms.current).filter((l) => l.chain === "L").length : 0;
+      let serial = 90000;
+      ligs.forEach((l, k) => {
+        const n = base + k + 1; const resn = n < 10 ? `LG${n}` : `L${n}`;
+        models.push({ data: toPDBLines(l.info, resn, "L", n, serial), fmt: "pdb" }); serial += l.info.atoms.length;
+        ligInfo.current.set(`L:${resn}:${n}`, l.info); ligNames.current.set(resn, l.f.name);
+      });
+      const first = structs[0]?.f || ligs[0].f;
+      const meta = append ? { ...info } : { id: first.name.replace(/\.[^.]+$/, ""), title: files.map((f) => f.name).join(" + "), sub: "Uploaded files", source: "upload" };
+      await ingest(models, meta, append);
+    } catch (e2) { setErr(e2.message || String(e2)); setStatus(atoms.current.length ? "ready" : "idle"); }
   }
 
   function chooseLigand(k) {
@@ -164,8 +215,9 @@ export default function PdbViewer() {
           <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && load(input)} spellCheck="false" aria-label="PDB ID" />
         </label>
         <button className="pv-btn pv-primary" onClick={() => load(input)} disabled={status === "loading"}>{status === "loading" ? "Loading…" : "Load"}</button>
-        <label className="pv-btn">Upload file<input type="file" accept=".pdb,.ent,.cif,.mmcif" onChange={onFile} hidden /></label>
+        <label className="pv-btn">Upload files<input type="file" multiple accept=".pdb,.ent,.cif,.mmcif,.sdf,.mol,.pdbqt" onChange={onFiles} hidden /></label>
         {info && <div className="pv-info"><b>{info.id}</b>{info.sub ? ` · ${info.sub}` : ""}<span>{info.title}</span></div>}
+        <p className="pv-small pv-grow">Structure: .pdb .cif .mmcif · Ligand or docking pose: .sdf .mol .pdbqt. Select a protein and a ligand file together, or add a ligand to a loaded structure.</p>
         {err && <p className="pv-err" role="alert">{err}</p>}
       </div>
 
@@ -192,11 +244,17 @@ export default function PdbViewer() {
           <p className="pv-lbl">Ligand</p>
           <select value={ligKey} onChange={(e) => chooseLigand(e.target.value)} aria-label="Ligand" disabled={!ligands.length}>
             <option value="">{ligands.length ? "None (whole structure)" : "No ligand found"}</option>
-            {ligands.map((l) => <option key={l.key} value={l.key}>{l.resn} · chain {l.chain} · {l.resi}</option>)}
+            {ligands.map((l) => <option key={l.key} value={l.key}>{l.resn} · chain {l.chain} · {l.resi}{ligNames.current.get(l.resn) ? ` · ${ligNames.current.get(l.resn)}` : ""}</option>)}
           </select>
           {lig && (<>
             <label className="pv-chk"><input type="checkbox" checked={showRes} onChange={(e) => setShowRes(e.target.checked)} />Interacting residues (whole complex)</label>
             <label className="pv-chk"><input type="checkbox" checked={showLab} onChange={(e) => setShowLab(e.target.checked)} />Residue labels</label>
+            {!ligInfo.current.get(lig.key)?.bondsKnown && (
+              <div className="pv-smi">
+                <label>SMILES (optional, improves the 2D drawing)<input value={smilesIn} onChange={(e) => setSmilesIn(e.target.value)} placeholder="CS(=O)(=O)Nc1ccc(Cl)cc1" spellCheck="false" /></label>
+                <button className="pv-chip" onClick={() => setSmilesMap((m) => ({ ...m, [lig.key]: smilesIn.trim() }))}>Apply</button>
+              </div>
+            )}
             <label className="pv-rng">Contact cutoff <b>{cutoff.toFixed(1)} Å</b><input type="range" min="3" max="6" step="0.5" value={cutoff} onChange={(e) => setCutoff(+e.target.value)} /></label>
           </>)}
           {illust && (<>
@@ -212,7 +270,7 @@ export default function PdbViewer() {
           <section className="pv-card pv-map">
             <div className="pv-head"><p className="pv-lbl">Contact map · {lig.resn} {lig.chain}{lig.resi}</p><span>{contacts.length} residues within {cutoff.toFixed(1)} Å</span></div>
             <div className="pv-svg" dangerouslySetInnerHTML={{ __html: svg }} />
-            <p className="pv-note">Ligand atoms are projected onto the plane that best spreads the contacts. Distances are in Å. Interaction types are assigned from distance and atom type only.</p>
+            <p className="pv-note">{l2dErr ? `2D drawing failed (${l2dErr}); showing the 3D projection.` : l2d ? l2d.note : "Preparing the 2D drawing…"} Distances are in Å. Interaction types are assigned from distance and atom type only.</p>
           </section>
           <section className="pv-card pv-reslist">
             <p className="pv-lbl">Interacting residues · {contacts.length}</p>
@@ -298,7 +356,7 @@ function ExportDialog({ onClose, viewer, T, raw, build, illust, ow, bands, bg, l
         document.body.appendChild(holder);
         try {
           const v2 = T.current.createViewer(holder, { backgroundAlpha: 0, antialias: true });
-          v2.addModel(raw.current.data, raw.current.fmt);
+          raw.current.models.forEach((m) => v2.addModel(m.data, m.fmt));
           build(v2, T.current);
           v2.setView(viewer.current.getView());
           v2.render();

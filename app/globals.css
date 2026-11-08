@@ -651,3 +651,7 @@ a.tl-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,
 .pv-prev2 { height: 100%; background: #fff; }
 .pv-prev2 svg { height: 100%; width: auto; max-width: 100%; margin: 0 auto; }
 .pv-dfoot { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 26px 20px; border-top: 1px solid var(--line); }
+.pv-grow { flex-basis: 100%; }
+.pv-smi { display: flex; gap: 6px; align-items: flex-end; }
+.pv-smi label { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; font-size: .78rem; color: #44474D; }
+.pv-smi input { font: inherit; font-size: .85rem; height: 38px; border-radius: 10px; border: 1px solid #DAD6CB; padding: 0 10px; width: 100%; box-sizing: border-box; }
