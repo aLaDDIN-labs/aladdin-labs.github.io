@@ -585,12 +585,17 @@ a.tl-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,
 
 /* PDB viewer */
 .nav a.is-here { font-weight: 500; text-shadow: 0 0 0.6px currentColor; }
-.pv-page { padding: 40px 0 80px; }
+.pv-wrap { padding-top: 22px; padding-bottom: 80px; }
 .pv-page .tl-lede { margin: 14px 0 26px; max-width: 60ch; color: var(--muted); }
 .pv { display: flex; flex-direction: column; gap: 16px; }
-.pv .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.pv-hero .sr, .pv .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .pv-card { border: 1px solid var(--line); border-radius: 18px; background: #fff; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
-.pv-load { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 10px; background: #FAF6EB; border-color: #EEE6CF; }
+.pv-hero { background: #FAF6EB; border-bottom: 1px solid var(--line); padding: 26px 0 22px; }
+.pv-hero .eyebrow { margin: 0 0 4px; }
+.pv-titlerow { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.pv-hero .team-title { font-size: clamp(2rem, 4vw, 3.4rem); }
+.pv-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.pv-load { display: flex; flex-direction: row; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 .pv-id input { font: inherit; font-size: 1rem; letter-spacing: .08em; text-transform: uppercase; height: 44px; width: 140px; border-radius: 12px; border: 1px solid #DAD6CB; padding: 0 14px; background: #fff; }
 .pv-btn, .pv-chip { font: inherit; font-size: .85rem; line-height: 1; padding: 0 16px; min-height: 40px; border-radius: 999px; border: 1px solid #DAD6CB; background: #fff; color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; }
 .pv-chip { min-height: 36px; padding: 0 14px; }

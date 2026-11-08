@@ -49,6 +49,11 @@ export default function PdbViewer() {
   const contacts = useMemo(() => (lig ? findContacts(atoms.current, lig, cutoff) : []), [lig, cutoff, tick]);
   const svg = useMemo(() => (lig ? contactMapSVG(lig, contacts, chains, `${lig.resn} ${lig.chain}${lig.resi} · ${info?.id || ""}`, l2d, atoms.current) : ""), [lig, contacts, chains, info, l2d]);
 
+  const svgLig = useMemo(() => (lig ? contactMapSVG(lig, [], chains, `${lig.resn} ${lig.chain}${lig.resi}`, l2d, atoms.current, { ligandOnly: true }) : ""), [lig, chains, l2d]);
+  const [dlgMode, setDlgMode] = useState("3d");
+  const [copied, setCopied] = useState(false);
+  const share = () => { try { navigator.clipboard.writeText(location.href); setCopied(true); setTimeout(() => setCopied(false), 1600); } catch {} };
+
   // 2D structure of the chosen ligand (RDKit-JS, loaded on demand)
   useEffect(() => {
     setL2d(null); setL2dErr("");
@@ -194,7 +199,31 @@ export default function PdbViewer() {
   const focusRes = (r) => { const v = viewer.current; v.zoomTo({ chain: r.chain, resi: r.resi }); v.zoom(0.55, 500); v.render(); };
 
   return (
-    <div className="pv">
+    <>
+      <section className="pv-hero">
+        <div className="container">
+          <p className="eyebrow">Tools / 01 Structure</p>
+          <div className="pv-titlerow">
+            <h1 className="team-title"><span className="light">PDB</span> <span>viewer</span>{lig && <span className="light"> · ligand mode</span>}</h1>
+            <div className="pv-acts">
+              <button className="pv-btn" onClick={share}>{copied ? "Link copied" : "Copy share link"}</button>
+              <button className="pv-btn pv-primary" onClick={() => { setDlgMode("3d"); setDlg(true); }} disabled={status !== "ready"}>Export figure…</button>
+            </div>
+          </div>
+          <div className="pv-load">
+
+        <label className="pv-id"><span className="sr">PDB ID</span>
+          <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && load(input)} spellCheck="false" aria-label="PDB ID" />
+        </label>
+        <button className="pv-btn pv-primary" onClick={() => load(input)} disabled={status === "loading"}>{status === "loading" ? "Loading…" : "Load"}</button>
+        <label className="pv-btn">Upload files<input type="file" multiple accept=".pdb,.ent,.cif,.mmcif,.sdf,.mol,.pdbqt" onChange={onFiles} hidden /></label>
+        {info && <div className="pv-info"><b>{info.id}</b>{info.sub ? ` · ${info.sub}` : ""}<span>{info.title}</span></div>}
+        <p className="pv-small pv-grow">Structure: .pdb .cif .mmcif · Ligand or docking pose: .sdf .mol .pdbqt. Select a protein and a ligand file together, or add a ligand to a loaded structure.</p>
+        {err && <p className="pv-err" role="alert">{err}</p>}
+          </div>
+        </div>
+      </section>
+      <div className="container pv-wrap"><div className="pv">
       <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
         <filter id="pv-illust" x="-5%" y="-5%" width="110%" height="110%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceGraphic" result="flat">
@@ -210,24 +239,12 @@ export default function PdbViewer() {
         </filter>
       </svg>
 
-      <div className="pv-card pv-load">
-        <label className="pv-id"><span className="sr">PDB ID</span>
-          <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && load(input)} spellCheck="false" aria-label="PDB ID" />
-        </label>
-        <button className="pv-btn pv-primary" onClick={() => load(input)} disabled={status === "loading"}>{status === "loading" ? "Loading…" : "Load"}</button>
-        <label className="pv-btn">Upload files<input type="file" multiple accept=".pdb,.ent,.cif,.mmcif,.sdf,.mol,.pdbqt" onChange={onFiles} hidden /></label>
-        {info && <div className="pv-info"><b>{info.id}</b>{info.sub ? ` · ${info.sub}` : ""}<span>{info.title}</span></div>}
-        <p className="pv-small pv-grow">Structure: .pdb .cif .mmcif · Ligand or docking pose: .sdf .mol .pdbqt. Select a protein and a ligand file together, or add a ligand to a loaded structure.</p>
-        {err && <p className="pv-err" role="alert">{err}</p>}
-      </div>
-
       <div className="pv-main">
         <section className="pv-stagewrap">
           <div className="pv-bar">
             {["cartoon", "surface", "sticks", "spheres"].map((s) => <button key={s} className={`pv-chip${style === s ? " on" : ""}`} onClick={() => setStyle(s)}>{s[0].toUpperCase() + s.slice(1)}</button>)}
             <button className={`pv-chip pv-illust${illust ? " on" : ""}`} onClick={() => setIllust(!illust)} aria-pressed={illust}>✎ Illust</button>
             <button className="pv-chip pv-right" onClick={() => { viewer.current?.zoomTo(); viewer.current?.render(); }}>Reset view</button>
-            <button className="pv-chip pv-go" onClick={() => setDlg(true)} disabled={status !== "ready"}>Export figure…</button>
           </div>
           <div className={`pv-stage bg-${bg}`} style={{ background: BGS[bg] || undefined }}>
             <div ref={stage} className="pv-canvas" style={illust ? { filter: "url(#pv-illust)" } : undefined} />
@@ -268,7 +285,7 @@ export default function PdbViewer() {
       {lig && (
         <div className="pv-main pv-lower">
           <section className="pv-card pv-map">
-            <div className="pv-head"><p className="pv-lbl">Contact map · {lig.resn} {lig.chain}{lig.resi}</p><span>{contacts.length} residues within {cutoff.toFixed(1)} Å</span></div>
+            <div className="pv-head"><p className="pv-lbl">Contact map · {lig.resn} {lig.chain}{lig.resi}</p><span>{contacts.length} residues within {cutoff.toFixed(1)} Å</span><button className="pv-chip" onClick={() => { setDlgMode("2d"); setDlg(true); }}>Export map…</button></div>
             <div className="pv-svg" dangerouslySetInnerHTML={{ __html: svg }} />
             <p className="pv-note">{l2dErr ? `2D drawing failed (${l2dErr}); showing the 3D projection.` : l2d ? l2d.note : "Preparing the 2D drawing…"} Distances are in Å. Interaction types are assigned from distance and atom type only.</p>
           </section>
@@ -281,8 +298,9 @@ export default function PdbViewer() {
           </section>
         </div>
       )}
-      {dlg && <ExportDialog onClose={() => setDlg(false)} viewer={viewer} T={$3D} raw={raw} build={build} illust={illust} ow={ow} bands={bands} bg={bg} lig={lig} svg={svg} info={info} />}
-    </div>
+      {dlg && <ExportDialog initMode={dlgMode} svgLig={svgLig} onClose={() => setDlg(false)} viewer={viewer} T={$3D} raw={raw} build={build} illust={illust} ow={ow} bands={bands} bg={bg} lig={lig} svg={svg} info={info} />}
+      </div></div>
+    </>
   );
 }
 
@@ -293,8 +311,11 @@ function mix(a, b, t) {
 }
 
 // ---------------------------------------------------------------------------------------
-function ExportDialog({ onClose, viewer, T, raw, build, illust, ow, bands, bg, lig, svg, info }) {
-  const [mode, setMode] = useState("3d");
+function ExportDialog({ initMode, svgLig, onClose, viewer, T, raw, build, illust, ow, bands, bg, lig, svg, info }) {
+  const [mode, setMode] = useState(initMode === "2d" && lig ? "2d" : "3d");
+  const [which, setWhich] = useState("map");
+  const svgSel = which === "lig" ? svgLig : svg;
+  const vb = (svgSel.match(/viewBox="0 0 (\d+) (\d+)"/) || [0, 0, 760, 860]).slice(1).map(Number);
   const [w, setW] = useState(180), [h, setH] = useState(120), [unit, setUnit] = useState("mm");
   const [dpi, setDpi] = useState(600);
   const [fmt, setFmt] = useState("pdf");
@@ -347,7 +368,7 @@ function ExportDialog({ onClose, viewer, T, raw, build, illust, ow, bands, bg, l
   async function run() {
     setBusy(true); setMsg("");
     try {
-      const name = `${info?.id || "structure"}${lig ? "_" + lig.resn : ""}`;
+      const name = `${info?.id || "structure"}${lig ? "_" + lig.resn : ""}${mode === "2d" && which === "lig" ? "_structure" : ""}`;
       if (mode === "3d") {
         const [W, H] = px;
         let uri;
@@ -374,13 +395,14 @@ function ExportDialog({ onClose, viewer, T, raw, build, illust, ow, bands, bg, l
           doc.save(`${name}.pdf`);
         }
       } else {
-        const out = svg;
+        const out = svgSel;
         if (fmt === "svg") { download(URL.createObjectURL(new Blob([out], { type: "image/svg+xml" })), `${name}_contacts.svg`); }
         else if (fmt === "png") {
-          const W = px[0], H = Math.round((W * 860) / 760);
+          const W = px[0], H0 = Math.round((W * vb[1]) / vb[0]), H = mark ? Math.round(H0 * (1 + msize / 100 + 0.05)) : H0;
           const img = await loadImg("data:image/svg+xml;charset=utf-8," + encodeURIComponent(out));
           const c = document.createElement("canvas"); c.width = W; c.height = H;
-          const x = c.getContext("2d"); if (!transparent) { x.fillStyle = "#fff"; x.fillRect(0, 0, W, H); } x.drawImage(img, 0, 0, W, H);
+          const x = c.getContext("2d"); if (!transparent) { x.fillStyle = "#fff"; x.fillRect(0, 0, W, H); } x.drawImage(img, 0, 0, W, H0);
+          if (mark) { const lg = await loadImg(`${BASE}/images/brand/logo.png`); const lh = H * (msize / 100), lw = (lg.width / lg.height) * lh, m = H * 0.02; x.globalAlpha = 0.85; x.drawImage(lg, pos === "left" ? m : pos === "right" ? W - lw - m : (W - lw) / 2, H - lh - m, lw, lh); x.globalAlpha = 1; }
           download(c.toDataURL("image/png"), `${name}_contacts.png`);
         } else {
           const { jsPDF } = await import("jspdf");
@@ -389,8 +411,8 @@ function ExportDialog({ onClose, viewer, T, raw, build, illust, ow, bands, bg, l
           const el = holder.querySelector("svg");
           const doc = new jsPDF({ orientation: wmm >= hmm ? "l" : "p", unit: "mm", format: [wmm, hmm] });
           if (!transparent) { doc.setFillColor(255, 255, 255); doc.rect(0, 0, wmm, hmm, "F"); }
-          const k = Math.min(wmm / 760, hmm / 860); const mw = 760 * k, mh = 860 * k;
-          await doc.svg(el, { x: (wmm - mw) / 2, y: (hmm - mh) / 2, width: mw, height: mh });
+          const avail = hmm * (mark ? 1 - msize / 100 - 0.05 : 1); const k = Math.min(wmm / vb[0], avail / vb[1]); const mw = vb[0] * k, mh = vb[1] * k;
+          await doc.svg(el, { x: (wmm - mw) / 2, y: (avail - mh) / 2, width: mw, height: mh });
           holder.remove();
           if (mark) {
             const logo = await loadImg(`${BASE}/images/brand/logo.png`);
@@ -419,6 +441,10 @@ function ExportDialog({ onClose, viewer, T, raw, build, illust, ow, bands, bg, l
               <button className={`pv-chip${mode === "3d" ? " on" : ""}`} onClick={() => { setMode("3d"); setFmt("pdf"); }}>Structure (3D)</button>
               <button className={`pv-chip${mode === "2d" ? " on" : ""}`} onClick={() => { setMode("2d"); setFmt("pdf"); }} disabled={!lig}>Contact map (2D){!lig ? " · pick a ligand" : ""}</button>
             </div>
+            {mode === "2d" && (<>
+              <p className="pv-lbl">Content</p>
+              <div className="pv-row"><button className={`pv-chip${which === "map" ? " on" : ""}`} onClick={() => setWhich("map")}>Contact map</button><button className={`pv-chip${which === "lig" ? " on" : ""}`} onClick={() => setWhich("lig")}>Ligand structure only</button></div>
+            </>)}
             <p className="pv-lbl">Size</p>
             <div className="pv-row">{PRESETS.map(([t, a, b]) => <button key={t} className={`pv-chip${unit === "mm" && w === a && h === b ? " on" : ""}`} onClick={() => { setUnit("mm"); setW(a); setH(b); }}>{t}</button>)}</div>
             <div className="pv-row pv-end">
@@ -448,7 +474,7 @@ function ExportDialog({ onClose, viewer, T, raw, build, illust, ow, bands, bg, l
           <div className="pv-dcol">
             <p className="pv-lbl">Preview · {Math.round(wmm)} × {Math.round(hmm)} mm</p>
             <div className="pv-prev" style={{ aspectRatio: `${wmm}/${hmm}` }}>
-              {mode === "3d" ? (prev && <img src={prev} alt="Export preview" />) : <div className="pv-prev2" dangerouslySetInnerHTML={{ __html: svg }} />}
+              {mode === "3d" ? (prev && <img src={prev} alt="Export preview" />) : <div className="pv-prev2" dangerouslySetInnerHTML={{ __html: svgSel }} />}
             </div>
             <p className="pv-small">{mode === "3d" ? "The 3D structure is a rendered image placed in the file at the DPI above; the file is a PDF page of the chosen size. Outline is applied on the image." : "The contact map is written as vector shapes and text, so it stays sharp at any size."}</p>
             {msg && <p className="pv-err">{msg}</p>}
