@@ -13,6 +13,15 @@ function spline(P) {
   return d;
 }
 
+function ExtIcon({ cy = -17, s = 0.8 }) {
+  return (
+    <g transform={`translate(0 ${cy}) scale(${s})`} fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M-2.4 2.4 L2.4 -2.4 M-0.6 -2.4 H2.4 V0.6" />
+    </g>
+  );
+}
+const isOut = (t) => t.kind === "external" || t.kind === "server";
+
 function ServerIcon({ cy = -17, s = 0.8 }) {
   return (
     <g transform={`translate(0 ${cy}) scale(${s})`} fill="#fff">
@@ -153,7 +162,7 @@ export default function ToolsBrowser({ stages, tools, workflows, intro }) {
           {tools.map((t) => (
             <g key={"sh" + t.id} fill="none" stroke="#2C2C2A">
               <ellipse cx={t.map[0]} cy={t.map[1]} rx={9 * u} ry={3.4 * u} strokeOpacity=".45" strokeWidth="1" />
-              {t.kind === "server" && (
+              {isOut(t) && (
                 <ellipse cx={t.map[0]} cy={t.map[1]} rx={16 * u} ry={6 * u} strokeOpacity=".35" strokeWidth="1" strokeDasharray={`${2 * u} ${2 * u}`} />
               )}
             </g>
@@ -187,7 +196,7 @@ export default function ToolsBrowser({ stages, tools, workflows, intro }) {
               >
                 <g transform={`translate(${x} ${y}) scale(${s})`}>
                   <path d={PIN} fill={st.color} stroke={st.dark} strokeWidth=".8" />
-                  {!on && (t.kind === "server" ? <ServerIcon /> : <circle cx="0" cy="-17" r="2.6" fill="#fff" />)}
+                  {!on && (isOut(t) ? <ExtIcon /> : <circle cx="0" cy="-17" r="2.6" fill="#fff" />)}
                   {on && <text x="0" y="-13" textAnchor="middle" fill="#fff" fontSize="11" fontWeight="500">{idx + 1}</text>}
                 </g>
                 <text
@@ -226,11 +235,11 @@ export default function ToolsBrowser({ stages, tools, workflows, intro }) {
         <div className="tl-lgd">
           <span>
             <svg width="16" height="22" viewBox="-10 -20 20 22"><path d={PIN} fill="#1D9E75" stroke="#0F6E56" strokeWidth=".8" /><circle cy="-17" r="2.6" fill="#fff" /></svg>
-            Web tools
+            Tools built by the lab
           </span>
           <span>
-            <svg width="16" height="22" viewBox="-10 -20 20 22"><path d={PIN} fill="#5F5E5A" stroke="#2C2C2A" strokeWidth=".8" /><ServerIcon /></svg>
-            Server-run tools (internal)
+            <svg width="16" height="22" viewBox="-10 -20 20 22"><path d={PIN} fill="#5F5E5A" stroke="#2C2C2A" strokeWidth=".8" /><ExtIcon /></svg>
+            External services (also run in-house)
           </span>
           <button type="button" className="tl-show" onClick={showWorkflow}>Show these tools below ↓</button>
         </div>
@@ -280,10 +289,11 @@ export default function ToolsBrowser({ stages, tools, workflows, intro }) {
                     <span className="tl-top">
                       <span className="tl-dot" style={{ background: st.color }}>{n || ""}</span>
                       <span className="tl-stage">{String(t.stage + 1).padStart(2, "0")} {st.name}</span>
-                      <span className={`tl-kind ${t.kind}`}>{t.kind === "server" ? "Internal server" : "Web"}</span>
+                      <span className={`tl-kind ${t.kind}`}>{isOut(t) ? "External" : "Lab tool"}</span>
                     </span>
                     <span className="tl-name">{t.name}</span>
                     <span className="tl-desc">{t.desc}</span>
+                    {isOut(t) && t.local && <span className="tl-local">Also run in-house on the lab server</span>}
                     <span className="tl-tags">{t.tags.map((x) => <span key={x} className="tl-tag">{x}</span>)}</span>
                     <span className="tl-go">{t.url ? (ext ? "Open tool ↗" : "Open tool →") : "Link coming soon"}</span>
                   </>
@@ -302,6 +312,7 @@ export default function ToolsBrowser({ stages, tools, workflows, intro }) {
             </ul>
           </div>
         ))}
+        <p className="tl-note">Cards marked External link to third-party services. Where a card says "Also run in-house", the lab runs the same kind of tool on its own server for lab members, but does not offer it publicly, so the link goes to the external service. The terms of use, data handling, availability, and results of external services are the responsibility of the service and the user. Please do not upload unpublished or confidential data to them.</p>
       </section>
     </>
   );

@@ -694,3 +694,7 @@ a.tl-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,
 .sq-stds { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
 .sq-stds .pv-fld span { font-size: .78rem; }
 .sq-gel { width: 100%; max-width: 560px; height: auto; display: block; }
+.tl-kind.external { background: #ece8f7; color: #4F3A80; }
+.tl-note { margin: 26px 0 0; padding-top: 16px; border-top: 1px solid var(--line); font-size: .85rem; color: var(--muted); max-width: 70ch; line-height: 1.55; }
+.tl-local { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; color: #4F3A80; }
+.tl-local::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: #8F6CC0; }
