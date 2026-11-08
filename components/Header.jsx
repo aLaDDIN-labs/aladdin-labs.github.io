@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { L } from "./L";
 import MobileMenu from "./MobileMenu";
+import NavLinks from "./NavLinks";
 
 const nav = [
   { href: "/research/", en: "Research", ko: "연구" },
@@ -26,11 +27,7 @@ export default function Header({ name }) {
             height="64"
           />
         </Link>
-        <nav className="nav" aria-label="Primary">
-          {nav.map((n) => (
-            <Link key={n.href} href={n.href}><L en={n.en} ko={n.ko} /></Link>
-          ))}
-        </nav>
+        <NavLinks items={nav} />
         <div className="header-side">
           <Link className="btn btn-soft btn-sm btn-contact" href="/contact/"><L en="Contact" ko="연락처" /></Link>
           <MobileMenu items={nav.map(({ href, en }) => ({ href, label: en }))} />

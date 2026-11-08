@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function MobileMenu({ items }) {
   const [open, setOpen] = useState(false);
+  const path = usePathname() || "/";
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && setOpen(false);
     document.addEventListener("keydown", onKey);
@@ -28,7 +30,7 @@ export default function MobileMenu({ items }) {
       <div id="mobile-nav" className={`mobile-nav${open ? " is-open" : ""}`} hidden={!open}>
         <nav aria-label="Mobile">
           {items.map((n) => (
-            <Link key={n.href} href={n.href} onClick={() => setOpen(false)}>{n.label}</Link>
+            <Link key={n.href} href={n.href} className={path.startsWith(n.href) ? "is-here" : undefined} aria-current={path.startsWith(n.href) ? "page" : undefined} onClick={() => setOpen(false)}>{n.label}</Link>
           ))}
           <Link href="/contact/" onClick={() => setOpen(false)}>Contact</Link>
         </nav>

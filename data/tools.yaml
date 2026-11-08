@@ -16,7 +16,7 @@ stages:
   - { name: "Cryo-EM",       color: "#4C8FC9", dark: "#1B5389" }
 
 tools:
-  - { id: pdb,    name: "PDB viewer",  stage: 0, kind: web,    map: [245, 238], url: "", tags: [Structure, Visualization],
+  - { id: pdb,    name: "PDB viewer",  stage: 0, kind: web,    map: [245, 238], url: "/tools/pdb-viewer/", tags: [Structure, Visualization],
       desc: "Open and inspect protein and complex structures in the browser." }
   - { id: seq,    name: "Seq / conc",  stage: 0, kind: web,    map: [175, 310], url: "", tags: [Protein, Calculator],
       desc: "Sequence properties and protein concentration (MW, extinction coefficient, pI)." }
