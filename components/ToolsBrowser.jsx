@@ -289,11 +289,10 @@ export default function ToolsBrowser({ stages, tools, workflows, intro }) {
                     <span className="tl-top">
                       <span className="tl-dot" style={{ background: st.color }}>{n || ""}</span>
                       <span className="tl-stage">{String(t.stage + 1).padStart(2, "0")} {st.name}</span>
-                      <span className={`tl-kind ${t.kind}`}>{isOut(t) ? "External" : "Lab tool"}</span>
+                      <span className="tl-badges"><span className={`tl-kind ${t.kind}`}>{isOut(t) ? "External" : "Lab tool"}</span>{isOut(t) && t.local && <span className="tl-kind inhouse">In-house</span>}</span>
                     </span>
                     <span className="tl-name">{t.name}</span>
                     <span className="tl-desc">{t.desc}</span>
-                    {isOut(t) && t.local && <span className="tl-local">Also run in-house on the lab server</span>}
                     <span className="tl-tags">{t.tags.map((x) => <span key={x} className="tl-tag">{x}</span>)}</span>
                     <span className="tl-go">{t.url ? (ext ? "Open tool ↗" : "Open tool →") : "Link coming soon"}</span>
                   </>
