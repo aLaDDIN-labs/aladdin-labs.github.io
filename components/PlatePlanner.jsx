@@ -43,9 +43,9 @@ const DEF = {
       { id: "c8", name: "Cond 8", desc: "Cond 3 + 0.1% BSA", v: { pbs: 1, tr: 0.05, bsa: 0.1, dmso: 1 } },
     ],
   },
-  lay: { mode: "dose", plate: 96, orient: "row", nComp: 4, names: "", points: 8, max: 10, min: 0.01, unit: "µM", snap: "exact", reps: 2, repMode: "adjacent", edge: true, fillEdge: true, veh: 1, pos: 1, sensors: "shared", blank: true, useRef: true },
+  lay: { mode: "dose", plate: 96, orient: "row", nComp: 4, names: "", points: 8, max: 10, min: 0.01, unit: "µM", snap: "exact", reps: 2, repMode: "adjacent", edge: true, fillEdge: true, veh: 1, pos: 1, sensors: "shared", blank: true, useRef: true, nRef: 1 },
   bli: {
-    wellVol: 200, extra: 40, dmso: 1, method: "buffer", points: 6, factor: 2, blank: true, useRef: true, refName: "Biotin", startCol: 1,
+    wellVol: 200, extra: 40, dmso: 1, method: "buffer", points: 6, factor: 2, blank: true, useRef: true, refName: "Biotin", startCol: 1, kin: "multi", refRows: [],
     ligand: { name: "Bio-CRBN", load: 10, loadU: "µg/mL", stock: 1000 },
     analytes: [A1, A2], steps: mkSteps("two", [A1, A2]),
   },
@@ -75,7 +75,7 @@ function PrepTable({ plan, name }) {
 const KC = { buf: "#EFEBDD", load: "#CDEBDC", ref: "#E2EFD8", blank: "#F4EFE0", refassoc: "#F5D6D6", regen: "#E3E0F7", custom: "#E7E7E7" };
 const assocFill = (rank) => { const a = [253, 233, 196], b = [243, 152, 0]; const t = 1 - rank * 0.85; return `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * t))})`; };
 const bliCells = (plan) => plan.wells.map((w) => ({ ...w, fill: w.kind === "assoc" ? assocFill(w.rank) : KC[w.kind] || "#eee" }));
-const bliHeads = (plan, cfg) => { const h = {}; const an = (id) => cfg.analytes.find((a) => a.id === id); plan.steps.forEach((s) => { h[s.col] = s.t === "assoc" ? an(s.a)?.name || "Analyte" : s.t === "baseline" ? "Baseline" : s.t === "loading" ? "Loading" : s.t === "dissoc" ? "Dissoc." : s.t === "regen" ? "Regen." : "Other"; }); return h; };
+const bliHeads = (plan, cfg) => { const h = {}; const an = (id) => cfg.analytes.find((a) => a.id === id); plan.steps.forEach((s) => { h[s.col] = s.t === "assoc" ? s.hd || an(s.a)?.name || "Analyte" : s.t === "baseline" ? "Baseline" : s.t === "loading" ? "Loading" : s.t === "dissoc" ? "Dissoc." : s.t === "regen" ? "Regen." : "Other"; }); return h; };
 const cut = (t, n) => (String(t).length > n ? String(t).slice(0, n - 1) + "…" : String(t));
 
 const ShapeToggle = ({ shape, set }) => (
@@ -134,6 +134,7 @@ export default function PlatePlanner() {
 
   const dPlan = useMemo(() => dilutionPlan({ ...dil, vBlank: dil.vUse }), [dil]);
   const bPlan = useMemo(() => platePlan(bli), [bli]);
+  const single = bli.kin === "single";
   const sd = (k) => (v) => setDil((d) => ({ ...d, [k]: v }));
   const sb = (k) => (v) => setBli((d) => ({ ...d, [k]: v }));
   const sl = (k) => (v) => setBli((d) => ({ ...d, ligand: { ...d.ligand, [k]: v } }));
@@ -146,13 +147,14 @@ export default function PlatePlanner() {
   const bliPlates = useMemo(() => {
     if (lay.mode !== "bli" || ser.error) return [];
     const n = Math.round(lay.nComp) || 1, nm = Array.from({ length: n }, (_, i) => lNames[i] || `Cpd${i + 1}`);
-    const per = lay.sensors === "shared" ? 4 : 2, out = [];
+    const single = lay.sensors === "single", nRef = single && lay.useRef ? Math.max(1, Math.round(+lay.nRef || 1)) : 0;
+    const per = single ? Math.max(1, 8 - (lay.blank ? 1 : 0) - nRef) : lay.sensors === "shared" ? 4 : 2, out = [];
     for (let k = 0; k < n; k += per) {
       const analytes = nm.slice(k, k + per).map((name, i) => ({ id: "d" + (k + i), name, stock: bli.analytes[0]?.stock ?? 100, stockU: bli.analytes[0]?.stockU ?? "mM", top: +lay.max, topU: lay.unit }));
       let steps = [];
       if (lay.sensors === "shared") { steps = [{ t: "baseline" }, { t: "loading" }, { t: "baseline" }]; analytes.forEach((a) => steps.push({ t: "assoc", a: a.id }, { t: "dissoc" })); }
-      else analytes.forEach((a) => steps.push({ t: "baseline" }, { t: "loading" }, { t: "baseline" }, { t: "assoc", a: a.id }, { t: "dissoc" }));
-      const cfg = { ...bli, points: ser.p, factor: ser.f, blank: lay.blank, useRef: lay.useRef, analytes, steps, startCol: 1 };
+      else if (!single) analytes.forEach((a) => steps.push({ t: "baseline" }, { t: "loading" }, { t: "baseline" }, { t: "assoc", a: a.id }, { t: "dissoc" }));
+      const cfg = { ...bli, kin: single ? "single" : "multi", refRows: single ? Array.from({ length: nRef }, (_, i) => ({ a: analytes[i % analytes.length].id })) : [], points: ser.p, factor: ser.f, blank: lay.blank, useRef: lay.useRef, analytes, steps: single ? bli.steps : steps, startCol: 1 };
       out.push({ cfg, plan: platePlan(cfg) });
     }
     return out;
@@ -227,8 +229,8 @@ export default function PlatePlanner() {
       B.push({ t: "h", text: "Dilutions" }); B.push({ t: "p", text: `Series of ${ser.p} points, ${sig(ser.f, 3)}-fold, from ${sig(+lay.max, 4)} ${lay.unit}. Open the Dilution series tab to get the pipetting volumes.` });
     } else if (tab === "bli") {
       B.push({ t: "h", text: "Settings" });
-      B.push({ t: "kv", rows: [["Volume per well", `${bli.wellVol} µL (+ ${bli.extra} µL extra per solution)`], ["Buffer DMSO", `${bli.dmso} %`], ["Ligand", `${bli.ligand.name}, loaded at ${bli.ligand.load} ${bli.ligand.loadU} (stock ${bli.ligand.stock} ${bli.ligand.loadU})`], ["Series", `${bli.points} points, ${bli.factor}-fold${bli.blank ? ", blank row" : ""}${bli.useRef ? `, reference sensor (${bli.refName})` : ""}`], ["Dilution method", bli.method === "dmso" ? "in DMSO, then spike" : "in buffer with DMSO"], ["Analytes", bli.analytes.map((a) => `${a.name} (stock ${a.stock} ${a.stockU}, top ${a.top} ${a.topU})`).join("; ")]] });
-      B.push({ t: "table", title: "Columns, in the order the sensors move", head: ["Col.", "Step", "Detail"], rows: bPlan.steps.map((st) => [st.col + 1, (STEP_T.find((x) => x[0] === st.t) || [0, st.t])[1], st.t === "assoc" ? an(st.a)?.name || "" : st.label || ""]), widths: [14, 60, 0] });
+      B.push({ t: "kv", rows: [["Method", single ? `Single-cycle kinetics, ${bli.points} rising concentrations, one dissociation at the end` : "Multi-cycle kinetics"], ["Volume per well", `${bli.wellVol} µL (+ ${bli.extra} µL extra per solution)`], ["Buffer DMSO", `${bli.dmso} %`], ["Ligand", `${bli.ligand.name}, loaded at ${bli.ligand.load} ${bli.ligand.loadU} (stock ${bli.ligand.stock} ${bli.ligand.loadU})`], ["Series", `${bli.points} points, ${bli.factor}-fold${bli.blank ? ", blank row" : ""}${single ? `, ${(bli.refRows || []).length} reference sensor(s) without protein` : bli.useRef ? `, reference sensor (${bli.refName})` : ""}`], ["Dilution method", bli.method === "dmso" ? "in DMSO, then spike" : "in buffer with DMSO"], ["Analytes", bli.analytes.map((a) => `${a.name} (stock ${a.stock} ${a.stockU}, top ${a.top} ${a.topU})`).join("; ")]] });
+      B.push({ t: "table", title: "Columns, in the order the sensors move", head: ["Col.", "Step", "Detail"], rows: bPlan.steps.map((st) => [st.col + 1, (STEP_T.find((x) => x[0] === st.t) || [0, st.t])[1], st.t === "assoc" ? st.hd || an(st.a)?.name || "" : st.label || ""]), widths: [14, 60, 0] });
       B.push({ t: "svg", caption: "96-well plate", svg: await plateSvg(8, 12, bliCells(bPlan), bliHeads(bPlan, bli)) });
       B.push({ t: "table", title: "Solutions to prepare", head: ["Solution", "Total volume", "How"], rows: bPlan.sols.map((x) => [x.name, fVol(x.vol), x.how]), widths: [52, 26, 0] });
       bPlan.warnings.forEach((w) => B.push({ t: "p", text: "Note: " + w }));
@@ -316,9 +318,10 @@ export default function PlatePlanner() {
                   {lay.edge && <label className="pp-chk"><input type="checkbox" checked={lay.fillEdge} onChange={(e) => sL("fillEdge")(e.target.checked)} /> Fill the outer wells with PBS or medium</label>}
                 </>) : (<>
                   <p className="pv-lbl">Sensors</p>
-                  <Fld t="Sensor use"><Sel v={lay.sensors} set={sL("sensors")} opts={[["shared", "Shared: one baseline and loading, then each compound"], ["own", "Own sensors for each compound"]]} w={210} /></Fld>
+                  <Fld t="Sensor use"><Sel v={lay.sensors} set={sL("sensors")} opts={[["shared", "Shared: one baseline and loading, then each compound"], ["own", "Own sensors for each compound"], ["single", "Single-cycle: one sensor per compound, rising concentrations"]]} w={210} /></Fld>
                   <label className="pp-chk"><input type="checkbox" checked={lay.blank} onChange={(e) => sL("blank")(e.target.checked)} /> Blank row after the series</label>
-                  <label className="pp-chk"><input type="checkbox" checked={lay.useRef} onChange={(e) => sL("useRef")(e.target.checked)} /> Reference sensor in row H</label>
+                  <label className="pp-chk"><input type="checkbox" checked={lay.useRef} onChange={(e) => sL("useRef")(e.target.checked)} /> {lay.sensors === "single" ? "Reference sensors below the compounds (no protein loaded)" : "Reference sensor in row H"}</label>
+                  {lay.sensors === "single" && lay.useRef && <Fld t="Number of reference sensors"><Num v={lay.nRef} set={sL("nRef")} w={64} min={1} /></Fld>}
                   <p className="pv-small" style={{ margin: 0 }}>Ligand, buffer, volumes and DMSO come from the BLI plate details tab.</p>
                 </>)}
               </section>
@@ -333,7 +336,7 @@ export default function PlatePlanner() {
                 {lay.mode === "dose" && dose && !dose.error && (
                   <p className="pv-small" style={{ margin: 0 }}>{dose.names.length} compound{dose.names.length > 1 ? "s" : ""} × {lay.reps} replicate{lay.reps > 1 ? "s" : ""} = {dose.linesNeeded} series. A {lay.plate}-well plate holds {dose.nLines} series of up to {dose.lineLen} wells here, so you need <b>{dose.nPlates} plate{dose.nPlates > 1 ? "s" : ""}</b>. Samples: {dose.linesNeeded * dose.series.p} wells, controls: {dose.linesNeeded * ((+lay.veh || 0) + (+lay.pos || 0))} wells.</p>
                 )}
-                {lay.mode === "bli" && bliPlates.length > 0 && <p className="pv-small" style={{ margin: 0 }}>{Math.round(lay.nComp)} compound{lay.nComp > 1 ? "s" : ""} need <b>{bliPlates.length} plate{bliPlates.length > 1 ? "s" : ""}</b> ({lay.sensors === "shared" ? "up to 4 compounds" : "up to 2 compounds"} per plate). Rows needed per column: {bliPlates[0].plan.nRows} of 8.</p>}
+                {lay.mode === "bli" && bliPlates.length > 0 && <p className="pv-small" style={{ margin: 0 }}>{Math.round(lay.nComp)} compound{lay.nComp > 1 ? "s" : ""} need <b>{bliPlates.length} plate{bliPlates.length > 1 ? "s" : ""}</b> ({lay.sensors === "single" ? `up to ${bliPlates[0].plan.nRows ? 8 - (bliPlates[0].plan.nRows - bliPlates[0].cfg.analytes.length) : 8} compounds` : lay.sensors === "shared" ? "up to 4 compounds" : "up to 2 compounds"} per plate). Sensors (rows) used: {bliPlates[0].plan.nRows} of 8.</p>}
                 <div className="pv-row"><button className="pv-chip" onClick={toDilution} disabled={!!ser.error}>Prepare these dilutions →</button>
                   {lay.mode === "bli" && bliPlates[pgi] && <button className="pv-chip" onClick={() => { setBli(bliPlates[pgi].cfg); setTab("bli"); }}>Open in BLI plate details →</button>}</div>
               </section>
@@ -407,6 +410,9 @@ export default function PlatePlanner() {
           {tab === "bli" && (<>
             <div className="pv-main">
               <section className="pv-card pp-cfg">
+                <p className="pv-lbl">Kinetics method</p>
+                <Fld t="Method"><Sel v={bli.kin || "multi"} set={sb("kin")} opts={[["multi", "Multi-cycle"], ["single", "Single-cycle"]]} w={170} /></Fld>
+                <p className="pv-small" style={{ margin: 0 }}>{single ? "Each row (A to H) is one compound on its own sensor. The sensor is dipped into the concentrations from low to high without regeneration, followed by one dissociation at the end." : "Each row is one concentration of one compound, and a concentration series goes down a column."}</p>
                 <p className="pv-lbl">Plate</p>
                 <Fld t="Volume per well (µL)"><Num v={bli.wellVol} set={sb("wellVol")} w={70} /></Fld>
                 <Fld t="Extra per solution (µL)"><Num v={bli.extra} set={sb("extra")} w={70} /></Fld>
@@ -416,17 +422,17 @@ export default function PlatePlanner() {
                 <Fld t="Name"><Txt v={bli.ligand.name} set={sl("name")} /></Fld>
                 <Fld t="Loading conc."><Num v={bli.ligand.load} set={sl("load")} w={70} /><Sel v={bli.ligand.loadU} set={sl("loadU")} opts={["µg/mL", "nM", "µM"]} w={84} /></Fld>
                 <Fld t="Ligand stock"><Num v={bli.ligand.stock} set={sl("stock")} w={84} /><span className="pp-u">{bli.ligand.loadU}</span></Fld>
-                <label className="pp-chk"><input type="checkbox" checked={bli.useRef} onChange={(e) => sb("useRef")(e.target.checked)} /> Reference sensor in row H</label>
-                {bli.useRef && <Fld t="Reference loading"><Txt v={bli.refName} set={sb("refName")} w={110} /></Fld>}
-                <p className="pv-lbl">Concentration series (rows A to {letters[Math.max(0, Math.min(7, (+bli.points || 1) - 1))]})</p>
+                {!single && <label className="pp-chk"><input type="checkbox" checked={bli.useRef} onChange={(e) => sb("useRef")(e.target.checked)} /> Reference sensor in row H</label>}
+                {(single || bli.useRef) && <Fld t={single ? "Reference sensor loading" : "Reference loading"}><Txt v={bli.refName} set={sb("refName")} w={110} ph={single ? "empty = no protein" : ""} /></Fld>}
+                <p className="pv-lbl">{single ? `Concentration series (${Math.round(+bli.points) || 1} association columns, low to high)` : `Concentration series (rows A to ${letters[Math.max(0, Math.min(7, (+bli.points || 1) - 1))]})`}</p>
                 <Fld t="Points"><Num v={bli.points} set={sb("points")} w={64} min={1} /></Fld>
                 <Fld t="Factor"><Num v={bli.factor} set={sb("factor")} w={64} min={1.01} /></Fld>
-                <label className="pp-chk"><input type="checkbox" checked={bli.blank} onChange={(e) => sb("blank")(e.target.checked)} /> Blank row after the series</label>
+                <label className="pp-chk"><input type="checkbox" checked={bli.blank} onChange={(e) => sb("blank")(e.target.checked)} /> {single ? "Blank sensor with ligand, buffer only" : "Blank row after the series"}</label>
                 <Fld t="Dilution method"><Sel v={bli.method} set={sb("method")} opts={[["buffer", "In buffer with DMSO"], ["dmso", "In DMSO, then spike"]]} w={170} /></Fld>
-                <p className="pv-lbl">Analytes</p>
+                <p className="pv-lbl">{single ? "Compounds (one sensor each)" : "Analytes"}</p>
                 {bli.analytes.map((a) => (
                   <div key={a.id} className="pp-an">
-                    <Fld t="Name"><Txt v={a.name} set={(v) => setAn(a.id, "name", v)} w={96} /><button className="pp-x" onClick={() => setBli((b) => ({ ...b, analytes: b.analytes.filter((x) => x.id !== a.id), steps: b.steps.filter((s) => s.a !== a.id) }))}>remove</button></Fld>
+                    <Fld t="Name"><Txt v={a.name} set={(v) => setAn(a.id, "name", v)} w={96} /><button className="pp-x" onClick={() => setBli((b) => ({ ...b, analytes: b.analytes.filter((x) => x.id !== a.id), steps: b.steps.filter((s) => s.a !== a.id), refRows: (b.refRows || []).map((r) => (r.a === a.id ? { a: "" } : r)) }))}>remove</button></Fld>
                     <Fld t="Stock"><Num v={a.stock} set={(v) => setAn(a.id, "stock", v)} w={70} /><Sel v={a.stockU} set={(v) => setAn(a.id, "stockU", v)} opts={CUNITS} w={68} /></Fld>
                     <Fld t="Top conc."><Num v={a.top} set={(v) => setAn(a.id, "top", v)} w={70} /><Sel v={a.topU} set={(v) => setAn(a.id, "topU", v)} opts={CUNITS} w={68} /></Fld>
                   </div>
@@ -435,6 +441,22 @@ export default function PlatePlanner() {
               </section>
 
               <section className="pv-card pp-out">
+                {single ? (<>
+                  <div className="pv-head"><p className="pv-lbl">Columns, in the order the sensors move</p></div>
+                  <div className="pp-chips">{bPlan.steps.map((st) => <span key={st.col}><i>{st.col + 1}</i>{st.t === "baseline" ? "Baseline" : st.t === "loading" ? "Loading" : st.t === "dissoc" ? "Dissociation" : st.hd}</span>)}</div>
+                  <div className="pv-head"><p className="pv-lbl">Reference sensors (no protein loaded)</p>
+                    <div className="pv-row"><button className="pv-chip" onClick={() => setBli((b) => ({ ...b, refRows: [...(b.refRows || []), { a: b.analytes[0]?.id || "" }] }))}>+ Add reference sensor</button></div></div>
+                  {(bli.refRows || []).length === 0 && <p className="pv-small" style={{ margin: 0 }}>No reference sensor yet. Each one is added as a row below the compounds, and is dipped in the same concentrations as the compound you pick.</p>}
+                  <div className="pp-steps">
+                    {(bli.refRows || []).map((r, i) => (
+                      <div key={i} className="pp-step"><b>{letters[bli.analytes.length + (bli.blank ? 1 : 0) + i] || "·"}</b>
+                        <Sel v={r.a || ""} set={(v) => setBli((b) => ({ ...b, refRows: b.refRows.map((x, j) => (j === i ? { a: v } : x)) }))} opts={[...bli.analytes.map((a) => [a.id, `Same as ${a.name}`]), ["", "Buffer only"]]} w={190} />
+                        <span className="pp-mv"><button onClick={() => setBli((b) => ({ ...b, refRows: b.refRows.filter((_, j) => j !== i) }))} aria-label="Remove reference sensor">✕</button></span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="pv-small" style={{ margin: 0 }}>Concentrations run from low to high across the association columns. In the dilution tables below, point 1 is the highest, so the last point goes into the first association column.</p>
+                </>) : (<>
                 <div className="pv-head"><p className="pv-lbl">Columns, in the order the sensors move</p>
                   <div className="pv-row"><span className="pv-small" style={{ margin: 0 }}>Presets</span>
                     <button className="pv-chip" onClick={() => sb("steps")(mkSteps("single", bli.analytes))}>One analyte</button>
@@ -451,6 +473,7 @@ export default function PlatePlanner() {
                   ))}
                 </div>
                 <div className="pv-row">{STEP_T.map(([k, t]) => <button key={k} className="pv-chip" onClick={() => addStep(k)}>+ {t.split(" (")[0]}</button>)}</div>
+                </>)}
                 {bPlan.warnings.map((w, i) => <p key={i} className="me-flag warn">{w}</p>)}
               </section>
             </div>
@@ -459,7 +482,7 @@ export default function PlatePlanner() {
               <div className="pv-head"><p className="pv-lbl">96-well plate</p>
                 <div className="pv-row"><ShapeToggle shape={shape} set={setShape} /><button className="pv-chip" onClick={() => exportPlate("svg")}>Plate SVG</button><button className="pv-chip" onClick={() => exportPlate("png")}>Plate PNG</button><button className="pv-chip" onClick={wellCSV}>Well list CSV</button></div></div>
               <div className="pp-plate"><PlateView rows={8} cols={12} cells={bliCells(bPlan)} heads={bliHeads(bPlan, bli)} shape={shape} sel={sel} onSel={setSel} svgRef={svgR} /></div>
-              <p className="pv-small">{sel ? <><b>{sel.well}</b> · {sel.full} · {sel.vol} µL</> : "Click a well to see what goes in it. Each row is one sensor, and sensors move from column to column. Orange is the analyte, darker for higher concentration, and red marks the reference sensor."}</p>
+              <p className="pv-small">{sel ? <><b>{sel.well}</b> · {sel.full} · {sel.vol} µL</> : "Click a well to see what goes in it. Each row is one sensor, and sensors move from column to column. Orange is the analyte, darker for higher concentration, and red marks the reference sensor (no protein)."}</p>
             </section>
 
             <section className="pv-card">
