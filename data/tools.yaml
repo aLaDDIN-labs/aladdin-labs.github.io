@@ -28,8 +28,8 @@ tools:
 
   - { id: mol,    name: "Mol editor",  stage: 1, kind: web,    map: [360, 290], url: "/tools/mol-editor/", tags: [Cheminformatics, Visualization],
       desc: "Draw and edit molecules and export SMILES for the screening tools." }
-  - { id: lib,    name: "Library map", stage: 1, kind: web,    map: [450, 250], url: "/tools/library/", tags: [Cheminformatics, Clustering, Visualization],
-      desc: "Upload a compound library, see its properties, and explore clusters on a clickable map." }
+  - { id: lib,    name: "Library map | SAR table", short: "Library | SAR", stage: 1, kind: web,    map: [450, 250], url: "/tools/library/", tags: [Cheminformatics, Clustering, SAR],
+      desc: "Upload a compound library with optional activity data. Explore properties, clusters, core and substituent effects, and activity cliffs." }
   - { id: lbvs,   name: "LBVS",        stage: 1, kind: external, local: true, map: [445, 345], url: "", tags: [Screening, Cheminformatics],
       desc: "Ligand-based virtual screening by similarity to known binders." }
   - { id: sbvs,   name: "SBVS",        stage: 1, kind: external, local: true, map: [515, 300], url: "", tags: [Screening, Docking],
@@ -52,8 +52,6 @@ tools:
       desc: "Fit biolayer interferometry sensorgrams (kon, koff, KD)." }
   - { id: ic50,   name: "IC50 fit",    stage: 3, kind: web,    map: [1080, 262], url: "", tags: [Assay, Data fitting],
       desc: "Dose-response curve fitting and IC50 estimation." }
-  - { id: sar,    name: "SAR table",   stage: 3, kind: web,    map: [1030, 330], url: "", tags: [SAR, Cheminformatics],
-      desc: "Structure-activity table that links compounds to measured values." }
 
   - { id: xtal,   name: "Xtal screen", stage: 4, kind: web,    map: [575, 525], url: "", tags: [Crystallography],
       desc: "Plan and track crystallization screens." }
@@ -84,6 +82,6 @@ workflows:
   - { name: "Synthesis planning",      sub: "Accessibility, retrosynthesis, sourcing, scale-up",     tools: [sa, retro, buy, rxn] }
   - { name: "Structure first",         sub: "Inspect, predict, dock",                                tools: [pdb, boltz, sbvs] }
   - { name: "Protein design",           sub: "Generate a binder, predict the complex, inspect",       tools: [rfd4, boltz, pdb] }
-  - { name: "Validation",              sub: "Binding, IC50, SAR",                                    tools: [bli, ic50, sar] }
+  - { name: "Validation",              sub: "Binding, IC50, SAR",                                    tools: [bli, ic50, lib] }
   - { name: "X-ray crystallography",   sub: "Crystallize, process, phase, refine, validate",         tools: [xtal, proc, phase, refine, valid] }
   - { name: "Cryo-EM",                 sub: "Preprocess, pick, classify, refine, view map",          tools: [prep, pick, cls, ref3, emap] }

@@ -285,7 +285,7 @@ export default function LibExplorer() {
         <div className="container">
           <p className="eyebrow">Tools / 02 Screening</p>
           <div className="pv-titlerow">
-            <h1 className="team-title"><span className="light">Library</span> <span>map</span></h1>
+            <h1 className="team-title"><span className="light">Library map</span> <span>| SAR table</span></h1>
             <div className="pv-acts">
               <button className="pv-btn" onClick={exportReps} disabled={!clusters}>Cluster representatives</button>
               <button className="pv-btn pv-primary" onClick={exportTable} disabled={!n}>Download table (CSV)</button>

@@ -212,7 +212,7 @@ export default function ToolsBrowser({ stages, tools, workflows, intro }) {
                   fontSize={(on ? 13 : 12) * u}
                   fontWeight={on ? 500 : 400}
                 >
-                  {t.name}
+                  {t.short || t.name}
                 </text>
               </g>
             );
