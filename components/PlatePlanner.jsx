@@ -123,6 +123,11 @@ export default function PlatePlanner() {
   const [sel, setSel] = useState(null);
   const [ready, setReady] = useState(false);
   const svgR = useRef(null);
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [note, setNote] = useState({ date: new Date().toLocaleDateString("sv-SE"), who: "", title: "", notes: "", sign: true });
+  const [noteBusy, setNoteBusy] = useState(false);
+  const [noteErr, setNoteErr] = useState("");
+  useEffect(() => { try { const w = localStorage.getItem("labNoteWho"); if (w) setNote((n) => ({ ...n, who: w })); } catch {} }, []);
 
   useEffect(() => { try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s) { s.dil && setDil({ ...DEF.dil, ...s.dil }); s.buf && setBuf(s.buf); s.bli && setBli({ ...DEF.bli, ...s.bli }); s.lay && setLay({ ...DEF.lay, ...s.lay }); s.tab && setTab(s.tab); } } catch {} setReady(true); }, []);
   useEffect(() => { if (!ready) return; try { localStorage.setItem(KEY, JSON.stringify({ dil, buf, bli, lay, tab })); } catch {} }, [dil, buf, bli, lay, tab, ready]);
@@ -183,6 +188,73 @@ export default function PlatePlanner() {
     const vb = svgR.current.getAttribute("viewBox").split(" ").map(Number); const img = new Image(); img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgText()); await new Promise((r) => { img.onload = r; });
     const c = document.createElement("canvas"); c.width = vb[2] * 3; c.height = vb[3] * 3; const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height); dl(c.toDataURL("image/png"), "bli_plate.png");
   };
+
+  // ---- Lab note PDF
+  const TAB_T = { lay: "Plate layout", bli: "BLI plate", dil: "Dilution series", buf: "Buffer recipes" };
+  const plateSvg = async (rows, cols, cells, heads) => { const { renderToStaticMarkup } = await import("react-dom/server"); return renderToStaticMarkup(<PlateView rows={rows} cols={cols} cells={cells} heads={heads} shape={shape} sel={null} onSel={() => {}} />); };
+  const prepBlocks = (plan, label) => {
+    if (!plan || plan.error) return [{ t: "p", text: plan?.error || "No plan." }];
+    const out = [];
+    plan.warns.forEach((w) => out.push({ t: "p", text: "Note: " + w }));
+    plan.sections.forEach((sec) => out.push({ t: "table", title: label ? `${label} · ${sec.title}` : sec.title, head: ["ID", "Final conc.", "How to prepare", "Volume made"], rows: sec.rows.map((r) => [r.id, r.conc, r.how, fVol(r.vol)]), widths: [16, 30, 0, 26] }));
+    out.push({ t: "p", text: `Total from the stock ${fVol(plan.tot.stock)} · DMSO ${fVol(plan.tot.dmso)} · buffer without DMSO ${fVol(plan.tot.buf0)}${plan.aq ? "" : ` · buffer with DMSO ${fVol(plan.tot.bufD)}`}. Volumes include the extra needed for pipetting.` });
+    return out;
+  };
+  const noteBlocks = async () => {
+    const B = [], lg = (cells) => cells;
+    if (tab === "lay") {
+      if (ser.error) return [{ t: "p", text: ser.error }];
+      B.push({ t: "h", text: "Experiment" });
+      B.push({ t: "kv", rows: [["Type", lay.mode === "bli" ? "BLI on an Octet" : "Concentration-dependent effect"], ["Compounds", `${Math.round(lay.nComp)}${lNames.length ? " (" + lNames.join(", ") + ")" : ""}`], ["Concentrations", `${ser.p} points, ${sig(ser.f, 3)}-fold, ${sig(+lay.max, 4)} to ${sig(ser.min, 4)} ${lay.unit}`], ...(lay.mode === "dose" ? [["Plate", `${lay.plate}-well, series ${lay.orient === "row" ? "along a row" : "down a column"}`], ["Replicates", `${lay.reps} (${lay.repMode === "adjacent" ? "next to each other" : "separate blocks"})`], ["Controls per series", `vehicle ${lay.veh}, positive ${lay.pos}`], ["Outer wells", lay.edge ? (lay.fillEdge ? "unused, filled with PBS or medium" : "unused") : "used"]] : [["Sensors", lay.sensors === "shared" ? "shared: one baseline and loading, then each compound" : "own sensors for each compound"], ["Blank / reference", `${lay.blank ? "blank row" : "no blank"}, ${lay.useRef ? "reference sensor in row H" : "no reference"}`]])] });
+      B.push({ t: "h", text: "Concentration series" });
+      B.push({ t: "table", head: ["#", ...ser.conc.map((_, k) => String(k + 1))], rows: [["Conc. (" + lay.unit + ")", ...ser.conc.map((c) => sig(c, 4))]], fontSize: 7 });
+      if (lay.mode === "dose" && dose && !dose.error) {
+        for (let pi = 0; pi < dose.nPlates; pi++) {
+          B.push({ t: "svg", caption: `${lay.plate}-well plate${dose.nPlates > 1 ? " " + (pi + 1) + " of " + dose.nPlates : ""}`, svg: await plateSvg(dose.R, dose.C, dose.plates[pi]) });
+          const items = dose.names.map((n, i) => [PAL[i % PAL.length], n]).concat([["#DADADA", "Vehicle"], ["#F4B6B6", "Positive"]]); if (lay.edge && lay.fillEdge) items.push(["#EDEAE0", "PBS or medium"]);
+          B.push({ t: "legend", items });
+          const by = new Map(); dose.plates[pi].filter((c) => c.kind === "dose").sort((a, b) => a.row - b.row || a.col - b.col).forEach((c) => { const k = c.comp + "-" + c.rep; if (!by.has(k)) by.set(k, { n: dose.names[c.comp], rep: c.rep, w: [] }); by.get(k).w.push(c); });
+          const ctl = (kind) => { const l = dose.plates[pi].filter((c) => c.kind === kind).map((c) => c.well); return l.length ? l.join(", ") : "–"; };
+          B.push({ t: "table", title: `Wells${dose.nPlates > 1 ? " · plate " + (pi + 1) : ""}`, head: ["Compound", "Rep.", "Wells, highest to lowest concentration"], rows: [...by.values()].map((v) => [v.n, v.rep, v.w.map((c) => c.well).join(", ")]).concat([["Vehicle control", "", ctl("veh")], ["Positive control", "", ctl("pos")]]), widths: [38, 14, 0], fontSize: 7.5 });
+        }
+      } else if (lay.mode === "bli") {
+        for (let pi = 0; pi < bliPlates.length; pi++) {
+          const bp = bliPlates[pi];
+          B.push({ t: "svg", caption: `96-well plate${bliPlates.length > 1 ? " " + (pi + 1) + " of " + bliPlates.length : ""}`, svg: await plateSvg(8, 12, bliCells(bp.plan), bliHeads(bp.plan, bp.cfg)) });
+          B.push({ t: "table", title: `Solutions${bliPlates.length > 1 ? " · plate " + (pi + 1) : ""}`, head: ["Solution", "Total volume", "How"], rows: bp.plan.sols.map((x) => [x.name, fVol(x.vol), x.how]), widths: [52, 26, 0] });
+        }
+      }
+      B.push({ t: "h", text: "Dilutions" }); B.push({ t: "p", text: `Series of ${ser.p} points, ${sig(ser.f, 3)}-fold, from ${sig(+lay.max, 4)} ${lay.unit}. Open the Dilution series tab to get the pipetting volumes.` });
+    } else if (tab === "bli") {
+      B.push({ t: "h", text: "Settings" });
+      B.push({ t: "kv", rows: [["Volume per well", `${bli.wellVol} µL (+ ${bli.extra} µL extra per solution)`], ["Buffer DMSO", `${bli.dmso} %`], ["Ligand", `${bli.ligand.name}, loaded at ${bli.ligand.load} ${bli.ligand.loadU} (stock ${bli.ligand.stock} ${bli.ligand.loadU})`], ["Series", `${bli.points} points, ${bli.factor}-fold${bli.blank ? ", blank row" : ""}${bli.useRef ? `, reference sensor (${bli.refName})` : ""}`], ["Dilution method", bli.method === "dmso" ? "in DMSO, then spike" : "in buffer with DMSO"], ["Analytes", bli.analytes.map((a) => `${a.name} (stock ${a.stock} ${a.stockU}, top ${a.top} ${a.topU})`).join("; ")]] });
+      B.push({ t: "table", title: "Columns, in the order the sensors move", head: ["Col.", "Step", "Detail"], rows: bPlan.steps.map((st) => [st.col + 1, (STEP_T.find((x) => x[0] === st.t) || [0, st.t])[1], st.t === "assoc" ? an(st.a)?.name || "" : st.label || ""]), widths: [14, 60, 0] });
+      B.push({ t: "svg", caption: "96-well plate", svg: await plateSvg(8, 12, bliCells(bPlan), bliHeads(bPlan, bli)) });
+      B.push({ t: "table", title: "Solutions to prepare", head: ["Solution", "Total volume", "How"], rows: bPlan.sols.map((x) => [x.name, fVol(x.vol), x.how]), widths: [52, 26, 0] });
+      bPlan.warnings.forEach((w) => B.push({ t: "p", text: "Note: " + w }));
+      bli.analytes.filter((a) => bPlan.plans[a.id]).forEach((a) => { B.push({ t: "h", text: `${a.name} · concentration series` }); B.push(...prepBlocks(bPlan.plans[a.id])); });
+    } else if (tab === "dil") {
+      B.push({ t: "h", text: "Dilution series" });
+      B.push({ t: "kv", rows: [["Stock", `${dil.stock} ${dil.stockU}`], ["Top concentration", `${dil.top} ${dil.topU}`], ["Factor / points", `${dil.factor}-fold, ${dil.points} points`], ["DMSO", `${dil.dmso} %`], ["Method", dil.method === "dmso" ? "in DMSO, then spike" : "in buffer with DMSO"]] });
+      B.push(...prepBlocks(dPlan));
+    } else {
+      B.push({ t: "h", text: "Buffer recipes" });
+      B.push({ t: "table", title: "Final concentrations", head: ["Buffer ID", "Description", ...buf.comps.map((c) => `${c.name} (${c.unit})`)], rows: buf.conds.map((c) => [c.name, c.desc, ...buf.comps.map((k) => c.v?.[k.id] ?? "")]), fontSize: 7 });
+      B.push({ t: "table", title: `Volumes to pipette for ${buf.vFinal} mL each`, head: ["Buffer ID", "Description", ...buf.comps.map((c) => c.name), "Water", "Final"], rows: bufRows.map(({ c, parts, water }) => [c.name, c.desc, ...parts.map((x) => (x > 0 ? fVol(x) : "–")), water < 0 ? "over volume" : fVol(water), fVol(vF)]), fontSize: 7 });
+      B.push({ t: "p", text: "Salts already present in a component (for example NaCl in PBS) are not counted. Only what is added is listed." });
+    }
+    return B;
+  };
+  const makeNote = async () => {
+    setNoteBusy(true); setNoteErr("");
+    try {
+      try { localStorage.setItem("labNoteWho", note.who); } catch {}
+      const { buildLabNote } = await import("../lib/labnotepdf");
+      const blocks = await noteBlocks();
+      await buildLabNote({ blocks, meta: { ...note, title: note.title.trim() || `${TAB_T[tab]}` }, orientation: tab === "buf" ? "landscape" : "portrait", filename: `labnote_${note.date || "date"}_${tab}.pdf` });
+    } catch (e) { console.error(e); setNoteErr("Could not make the PDF: " + (e?.message || e)); }
+    setNoteBusy(false);
+  };
   const reset = () => { setDil(DEF.dil); setBuf(DEF.buf); setBli(DEF.bli); setLay(DEF.lay); setSel(null); setPg(0); };
 
   return (
@@ -192,7 +264,7 @@ export default function PlatePlanner() {
           <p className="eyebrow">Tools / 04 Assay and SAR</p>
           <div className="pv-titlerow">
             <h1 className="team-title"><span className="light">Plate</span> <span>planner</span></h1>
-            <div className="pv-acts"><button className="pv-btn" onClick={reset}>Reset to example</button></div>
+            <div className="pv-acts"><button className="pv-btn" onClick={() => setNoteOpen((o) => !o)} aria-expanded={noteOpen}>Lab note PDF</button><button className="pv-btn" onClick={reset}>Reset to example</button></div>
           </div>
           <p className="sq-lede">Plan dilution series, buffer recipes and 96-well BLI plates. For every solution you get the volumes to pipette, and for every well you get what goes in it. The numbers are examples to adjust, so check them against your own protocol before use.</p>
         </div>
@@ -203,6 +275,21 @@ export default function PlatePlanner() {
           <div className="pv-row">
             {[["lay", "Layout designer"], ["bli", "BLI plate details"], ["dil", "Dilution series"], ["buf", "Buffer recipes"]].map(([k, t]) => <button key={k} className={`pv-chip ${tab === k ? "on" : ""}`} onClick={() => setTab(k)}>{t}</button>)}
           </div>
+
+          {noteOpen && (
+            <section className="pv-card pp-note">
+              <div className="pv-head"><p className="pv-lbl">Lab note PDF · {TAB_T[tab]} tab</p><button className="pv-chip" onClick={() => setNoteOpen(false)}>Close</button></div>
+              <div className="pp-noterow">
+                <Fld t="Date"><input className="pp-in" type="date" value={note.date} onChange={(e) => setNote({ ...note, date: e.target.value })} style={{ width: 150 }} /></Fld>
+                <Fld t="Experimenter"><Txt v={note.who} set={(v) => setNote({ ...note, who: v })} w={170} ph="Your name" /></Fld>
+                <Fld t="Title"><Txt v={note.title} set={(v) => setNote({ ...note, title: v })} w={260} ph={TAB_T[tab]} /></Fld>
+              </div>
+              <label className="pp-fld" style={{ alignItems: "flex-start" }}><span>Notes (optional)</span><textarea className="pp-in" style={{ width: "min(420px,100%)", height: 58, padding: 8 }} value={note.notes} placeholder="Purpose, sample lot, instrument, …" onChange={(e) => setNote({ ...note, notes: e.target.value })} /></label>
+              <label className="pp-chk"><input type="checkbox" checked={note.sign} onChange={(e) => setNote({ ...note, sign: e.target.checked })} /> Add signature lines at the end</label>
+              {noteErr && <p className="pv-err" role="alert">{noteErr}</p>}
+              <div className="pv-row"><button className="pv-btn" onClick={makeNote} disabled={noteBusy}>{noteBusy ? "Making PDF…" : "Download PDF"}</button><span className="pv-small" style={{ margin: 0 }}>The PDF shows the current tab with the aLaDDIN and KRICT logos, the date and the experimenter.</span></div>
+            </section>
+          )}
 
           {tab === "lay" && (<>
             <div className="pv-main">

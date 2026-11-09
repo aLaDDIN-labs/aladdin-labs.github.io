@@ -799,3 +799,8 @@ a.tl-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,
 .pp-chips span { font-size: .8rem; padding: 5px 10px; border-radius: 999px; background: #FAF6EB; border: 1px solid #EEE6CF; display: inline-flex; gap: 6px; align-items: center; }
 .pp-chips i { font-style: normal; color: var(--muted); font-size: .72rem; }
 textarea.pp-in { font-family: inherit; resize: vertical; }
+
+/* Plate planner: lab note panel */
+.pp-note{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
+.pp-noterow{display:flex;flex-wrap:wrap;gap:6px 22px}
+input.pp-in[type="date"]{font-family:inherit}
