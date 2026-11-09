@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PageBanner from "../../components/PageBanner";
 import { ArtDefs, Q3Fig } from "../../components/ResearchArt";
 
 export const metadata = { title: "Research" };
@@ -24,13 +25,9 @@ export default function Research() {
   return (
     <>
       <ArtDefs />
-      <header className="page-head">
-        <div className="container">
-          <p className="eyebrow">Research</p>
-          <h1 className="h1">Research</h1>
-          <p className="body-lg rs-lede">We work on drug discovery for hard targets and neurological disease, with computation, biophysics, structure and cell biology in one loop.</p>
-        </div>
-      </header>
+      <PageBanner src="/images/banners/research.webp" alt="Sketch of protein structures, plate assays, degrader complexes and neurons" eyebrow="Research" light="Discovery at" wordmark focus="-50%" />
+      <div className="container rs-intro"><p className="body-lg rs-lede">We work on drug discovery for hard targets and neurological disease, with computation, biophysics, structure and cell biology in one loop.</p></div>
+
 
       <div className="container">
         <section id="glue" className="rs-part1">

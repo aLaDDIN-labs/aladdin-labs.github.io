@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 
 const REVEAL =
-  "main .section-head, main .card, main .news-card, main .latest-grid > div, main .research-block, main .phil-step, main .phil-points li, main .pcards > li, main .pv-in > *, main .news-year > h2, main .news-year .news-card, main .tabbar-wrap, main .og-item, main .contact-info, main .contact-map, main .pub-entry, main .join-block, main .prose > *";
+  "main .section-head, main .card, main .news-card, main .latest-grid > div, main .research-block, main .phil-step, main .phil-points li, main .pcards > li, main .pv-in > *, main .news-year > h2, main .news-year .news-card, main .tabbar-wrap, main .og-item, main .contact-info, main .contact-map, main .pub-entry, main .join-block, main .prose > *, main .rs-intro > *, main .rs-part1 > *, main .rs-qtext > *, main .rs-card, main .rs-plat > .eyebrow, main .rs-plat > h2, main .rs-step, main .rs-return, main .rs-fb, main .rs-tools > *";
 
 // Inertia scrolling (Lenis) + gentle fade-up on scroll, similar to Apple's product pages.
 export default function SmoothScroll() {

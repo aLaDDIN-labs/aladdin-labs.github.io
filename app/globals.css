@@ -854,3 +854,6 @@ input.pp-in[type="date"]{font-family:inherit}
 .rs-proj b{padding:7px 15px;border-radius:999px;font-size:.9rem;font-weight:500;background:#FFF4DE;border:1px solid #F6D9A0;color:#7a4700}
 .rs-s-str{background:#E3F4F6;border-color:#BFE3E8;color:#2A93A6}
 .rs-fb{margin:0;text-align:center;font-size:.92rem;color:var(--muted)}
+
+.rs-intro{padding-top:44px}.rs-intro .rs-lede{margin:0}
+.rs-part1{padding-top:36px}
