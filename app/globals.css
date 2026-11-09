@@ -877,3 +877,31 @@ input.pp-in[type="date"]{font-family:inherit}
 .ff-armed .ff-a{opacity:0}
 .ff-on .ff-p{opacity:1;transform:none;transition:opacity .9s cubic-bezier(.16,1,.3,1) var(--d),transform .9s cubic-bezier(.16,1,.3,1) var(--d)}
 .ff-on .ff-a{opacity:1;transition:clip-path .7s cubic-bezier(.5,0,.2,1) var(--d),opacity .2s linear var(--d)}
+
+/* Research: method cards + sketched feedback arrow */
+.rs-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.lf{margin-top:44px;max-width:1180px}
+.lf-img{position:relative;width:100%}
+.lf-img img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.lf-armed .lf-card{opacity:0;transform:translateY(18px)}
+.lf-on .lf-card{opacity:1;transform:none;transition:opacity .8s cubic-bezier(.16,1,.3,1) var(--d),transform .8s cubic-bezier(.16,1,.3,1) var(--d)}
+.lf-arrow{display:block;width:100%;height:auto;margin-top:2px;overflow:visible}
+.lf-p{stroke:#F39800;stroke-width:3.4}
+.lf-p2{stroke:#F3A93A;stroke-width:1.8;opacity:.7}
+.lf-head{stroke:#F39800;stroke-width:3.6}
+.lf-flow{stroke:#fff;stroke-width:1.6;stroke-dasharray:3 16;opacity:.9}
+.lf-dot{fill:#F39800;stroke:#fff;stroke-width:2}
+.lf-armed .lf-p{stroke-dasharray:1;stroke-dashoffset:1}
+.lf-armed .lf-head,.lf-armed .lf-flow,.lf-armed .lf-dot{opacity:0}
+.lf-on .lf-p{stroke-dasharray:1;stroke-dashoffset:0;animation:lfDraw 1.7s cubic-bezier(.45,0,.2,1) 2.2s backwards}
+.lf-on .lf-p2{animation-delay:2.4s}
+.lf-on .lf-head{animation:lfFade .4s ease 3.7s backwards}
+.lf-on .lf-flow{animation:lfFade .5s ease 3.9s backwards,lfMarch 1.1s linear 3.9s infinite}
+.lf-on .lf-dot{animation:lfFade .4s ease 3.9s backwards}
+@keyframes lfDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes lfFade{from{opacity:0}}
+@keyframes lfMarch{to{stroke-dashoffset:-19}}
+.lf-static .lf-flow,.lf-static .lf-dot{display:none}
+.lf-cap{margin:2px 0 0;text-align:center;font-size:.9rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.lf-flow,.lf-dot{display:none}}
+.rs-plat .pv-bg{height:320px}
