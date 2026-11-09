@@ -4,11 +4,11 @@
 areas:
   - id: degraders
     title:
-      en: Targeted Protein Degraders
-      ko: 표적 단백질 분해제
+      en: Molecular glues for undruggable targets
+      ko: Undruggable 표적을 위한 분자접착제
     summary:
-      en: Structure-guided discovery of molecular glues and heterobifunctional degraders. Ternary complex structures, biophysical validation and computational pipelines are combined to explain selectivity and guide chemistry.
-      ko: 구조 기반으로 분자접착제와 이중기능 분해제를 발굴합니다. 삼원 복합체 구조, 생물물리 검증, 계산 파이프라인을 결합해 선택성을 설명하고 화학 설계를 이끕니다.
+      en: In silico evaluation that tells active from inactive compounds, used to find molecular glues beyond glutarimide scaffolds and to widen the set of E3 ligases. Structure, biophysics and cell assays confirm the predictions.
+      ko: 활성/비활성 화합물을 구별하는 in silico 평가로 glutarimide 골격을 넘는 분자접착제를 찾고 E3 ligase 범위를 넓힙니다. 구조, 생물물리, 세포 분석으로 예측을 검증합니다.
     key_papers: []          # e.g. ["10.1038/s41467-0xx-xxxxx-x"]
     figure: ""              # e.g. "/images/research/degrader.webp"
     figure_caption:
@@ -16,11 +16,11 @@ areas:
       ko: ""
   - id: circuits
     title:
-      en: Neuro Circuit Modulation
-      ko: 신경회로 조절
+      en: GPCR-mediated neuroprotection
+      ko: GPCR 기반 신경 보호
     summary:
-      en: Receptor- and synapse-level modulation of neural circuits. Signaling-biased ligands for GPCRs and phosphorylation-dependent organization of the postsynaptic density are studied from structure to cell and animal models.
-      ko: 수용체와 시냅스 수준에서 신경회로를 조절합니다. GPCR의 신호 편향 리간드와 시냅스후 치밀질의 인산화 의존적 조직화를 구조에서 세포·동물 모델까지 연구합니다.
+      en: GPCR signaling that stabilizes Nurr1 by blocking its E3 ligase-mediated degradation, so that neurogenesis and neuroprotection are driven together. Signaling-biased agonists and de novo designed proteins are tested in human neural progenitor models.
+      ko: GPCR 신호로 Nurr1의 E3 ligase 매개 분해를 막아 안정화하고, 신경 생성과 신경 보호를 함께 유도합니다. 신호 편향 작용제와 de novo 설계 단백질을 인간 신경전구세포 모델에서 검증합니다.
     key_papers: []
     figure: ""
     figure_caption:
@@ -28,11 +28,11 @@ areas:
       ko: ""
   - id: platform
     title:
-      en: Computational and Biophysical Platform
-      ko: 계산 및 생물물리 플랫폼
+      en: Core platform
+      ko: 핵심 플랫폼
     summary:
-      en: Automated computational pipelines for screening, molecular dynamics and scoring, paired with in-house biophysical assays for rapid validation of hits.
-      ko: 스크리닝, 분자동역학, 스코어링을 위한 자동화 계산 파이프라인과 자체 생물물리 분석을 결합해 히트를 빠르게 검증합니다.
+      en: AI-based drug discovery, biophysics, structure determination and cell biology, run as one loop in which each step's results feed the next round of design.
+      ko: AI 기반 신약개발, 생물물리, 구조 결정, 세포생물학을 하나의 루프로 운영하며 각 단계의 결과가 다음 설계에 반영됩니다.
     key_papers: []
     figure: ""
     figure_caption:

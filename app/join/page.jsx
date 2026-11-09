@@ -16,8 +16,8 @@ export default function Join() {
       <div className="container prose">
         <p className="body-lg">
           <L
-            en="We welcome students and postdoctoral researchers interested in structural biology, degrader discovery and neural circuit pharmacology. Placeholder text: replace with current openings."
-            ko="구조생물학, 분해제 발굴, 신경회로 약리학에 관심 있는 학생과 박사후연구원을 환영합니다. 임시 문구입니다. 현재 모집 내용으로 교체해 주세요."
+            en="We welcome students and postdoctoral researchers interested in structural biology, molecular glue discovery and neuroprotective GPCR pharmacology. Placeholder text: replace with current openings."
+            ko="구조생물학, 분자접착제 발굴, 신경보호 GPCR 약리학에 관심 있는 학생과 박사후연구원을 환영합니다. 임시 문구입니다. 현재 모집 내용으로 교체해 주세요."
           />
         </p>
         <p>

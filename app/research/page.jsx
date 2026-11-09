@@ -2,7 +2,7 @@ import Link from "next/link";
 import FlowFigure from "../../components/FlowFigure";
 import LoopFigure from "../../components/LoopFigure";
 import PageBanner from "../../components/PageBanner";
-import { ArtDefs, Q3Fig } from "../../components/ResearchArt";
+import { ArtDefs } from "../../components/ResearchArt";
 
 export const metadata = {
   title: "Research",
@@ -10,7 +10,7 @@ export const metadata = {
 };
 
 const PROJECTS = ["TRIB2 binder discovery", "GSPT1 molecular glue degraders", "E3 ligase expansion", "ATTEC design"];
-const NEURO_CHIPS = ["GPCR agonists", "Molecular Shield", "Human NPC models"];
+const NEURO_CHIPS = ["GPCR agonists", "Nurr1 stabilization", "Molecular Shield", "Human NPC models"];
 
 const ENGINE = [
   { k: "ai", t: "AI-driven drug discovery", items: ["Molecular dynamics", "Structure-based virtual screening", "Ligand-based virtual screening", "ADMET-AI", "Co-folding"] },
@@ -46,8 +46,8 @@ export default function Research() {
           <div className="container pv-in">
             <p className="pv-label"><span>02</span>Alzheimer&apos;s disease</p>
             <h2 className="pv-big rs-big">Can <em>neurogenesis</em> and <em>neuroprotection</em> be driven together?</h2>
-            <p className="pv-body">In models of Alzheimer&apos;s disease we search for compounds that promote neurogenesis and protect neurons. Two routes are followed: GPCR agonists with defined signaling bias, and de novo designed proteins, which we call Molecular Shield.</p>
-            <figure className="rs-card"><Q3Fig /></figure>
+            <p className="pv-body">Nurr1 is a transcription factor with a disordered, hard-to-drug surface, and it is lost in disease through E3 ligase-mediated degradation. Conventional ligands do not stop this loss. We ask whether GPCR signaling can stabilize Nurr1 by blocking degradation, so that neurogenesis and neuroprotection are driven together.</p><p className="pv-body">Alongside GPCR agonists with defined signaling bias, we design proteins de novo, which we call Molecular Shield.</p>
+            <figure className="rs-card"><img src={base + "/images/research/neuro-v1.webp"} alt="Nurr1 is lost by E3 ligase-mediated degradation; GPCR signaling stabilizes Nurr1 and adds neuroprotection beyond a conventional agonist" width={2048} height={1028} style={{ width: "100%", height: "auto", display: "block" }} loading="lazy" /></figure>
             <div className="rs-proj"><span>Focus</span>{NEURO_CHIPS.map((x) => <b key={x}>{x}</b>)}</div>
           </div>
         </section>
