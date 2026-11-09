@@ -762,3 +762,7 @@ a.tl-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,
 .lx-pair figure { margin: 0; display: flex; flex-direction: column; gap: 6px; }
 .lx-pair figcaption { font-size: .85rem; color: var(--muted); }
 @media (max-width: 640px) { .lx-core, .lx-pair { grid-template-columns: 1fr; } }
+.lx-jump { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; font-size: .85rem; color: var(--muted); margin: -4px 0; }
+.lx-jump b { color: var(--ink); }
+.lx-jump a { color: var(--orange-ink); text-decoration: none; font-weight: 500; }
+.lx-jump a:hover { text-decoration: underline; }

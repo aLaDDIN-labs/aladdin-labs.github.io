@@ -311,6 +311,12 @@ export default function LibExplorer() {
           {n > 0 && clusters && (<>
             <p className="pv-small" style={{ margin: 0 }}>{n.toLocaleString()} molecules · {nCl - nSingle} clusters + {nSingle} singletons{skipped ? ` · ${skipped} could not be read` : ""}. Similarity is Tanimoto on Morgan fingerprints (radius 2, 2048 bits); salts are reduced to the largest fragment.</p>
 
+            <div className="lx-jump">
+              <span><b>SAR:</b> {numCols.length === 0 ? "no numeric activity column found. Add one (for example IC50_nM) to the CSV and reload." : act ? `using “${actCol}” (${nAct} of ${n} values).` : "choose an activity column above the map."}</span>
+              <a href="#lx-sar">Core and substituents ↓</a>
+              {numCols.length > 0 && <a href="#lx-cliffs">Activity cliffs ↓</a>}
+            </div>
+
             <div className="pv-main">
               <section className="pv-card lx-map">
                 <div className="pv-head">
@@ -366,6 +372,7 @@ export default function LibExplorer() {
                   <div className="pv-row">
                     <button className="pv-chip" onClick={() => { try { navigator.clipboard.writeText(m.smiles); } catch {} }}>Copy SMILES</button>
                     <button className="pv-chip" onClick={() => { setOnlyCl(true); setShowN(100); }}>List this cluster</button>
+                    <a className="pv-chip" href="#lx-sar" style={{ textDecoration: "none" }}>Core and SAR ↓</a>
                   </div>
                   {thumbs.length > 1 && (<>
                     <p className="pv-lbl">Cluster members{sizeOf(sel) > 12 ? ` (first 12 of ${sizeOf(sel)})` : ""}</p>
@@ -376,7 +383,7 @@ export default function LibExplorer() {
             </div>
 
             {m && (
-              <section className="pv-card lx-sar">
+              <section id="lx-sar" className="pv-card lx-sar">
                 <div className="pv-head"><p className="pv-lbl">Core and substituents · cluster {clOf(sel) + 1}</p>{sarBusy && <span className="pv-small" style={{ margin: 0 }}>Analysing…</span>}</div>
                 {sar?.small && <p className="pv-small">This cluster has fewer than 3 members. Raise or lower the similarity cut-off, or pick a larger cluster.</p>}
                 {sar && !sar.small && !sar.smarts && <p className="pv-small">{sar.note || "No common core was found."}</p>}
@@ -399,8 +406,12 @@ export default function LibExplorer() {
               </section>
             )}
 
+            {!m && (
+              <section id="lx-sar" className="pv-card lx-sar"><p className="pv-lbl">Core and substituents</p><p className="pv-small">Click a molecule on the map or in the table. The common core of its cluster and the effect of each substituent on activity appear here.</p></section>
+            )}
+
             {act && (
-              <section className="pv-card">
+              <section id="lx-cliffs" className="pv-card">
                 <div className="pv-head"><p className="pv-lbl">Activity cliffs · {cliffs.length}{cliffs.length === 60 ? "+" : ""}</p>
                   <label className="lx-sel"><input type="checkbox" checked={showCliffs} onChange={(e) => setShowCliffs(e.target.checked)} /> Draw on map</label></div>
                 <div className="pv-row">
