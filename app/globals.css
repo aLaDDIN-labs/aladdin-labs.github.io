@@ -857,3 +857,23 @@ input.pp-in[type="date"]{font-family:inherit}
 
 .rs-intro{padding-top:44px}.rs-intro .rs-lede{margin:0}
 .rs-part1{padding-top:36px}
+
+/* Research: Philosophy-style sections */
+.rs-pv{background:#fff}
+.rs-sec .pv-bg{bottom:auto;height:620px}
+.rs-big{max-width:26ch;font-size:clamp(1.8rem,4vw,3.1rem)}
+.rs-sec .rs-p2{margin-top:14px}
+.rs-sec .rs-fig,.rs-sec .rs-card,.rs-sec .rs-loop{margin-top:44px}
+.rs-sec .rs-fig{margin-left:0;margin-right:0;max-width:1100px}
+.rs-sec .rs-card{max-width:720px;margin-left:0}
+.rs-sec .rs-proj{margin-left:0;margin-right:0}
+.rs-sec .rs-tl{margin-top:30px}
+.rs-sec .rs-return{margin-top:10px}
+
+/* Research: figure builds up from the left */
+.ff{position:relative;width:100%;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);box-shadow:0 10px 30px rgba(20,30,50,.06);background:#f7f6f2}
+.ff img{position:absolute;inset:0;width:100%;height:100%;display:block;border:0;border-radius:0;box-shadow:none}
+.ff-armed .ff-p{opacity:0;transform:translateX(-34px)}
+.ff-armed .ff-a{opacity:0}
+.ff-on .ff-p{opacity:1;transform:none;transition:opacity .9s cubic-bezier(.16,1,.3,1) var(--d),transform .9s cubic-bezier(.16,1,.3,1) var(--d)}
+.ff-on .ff-a{opacity:1;transition:clip-path .7s cubic-bezier(.5,0,.2,1) var(--d),opacity .2s linear var(--d)}
