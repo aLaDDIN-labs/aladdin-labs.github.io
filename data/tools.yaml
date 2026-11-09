@@ -50,6 +50,8 @@ tools:
 
   - { id: bli,    name: "BLI fit",     stage: 3, kind: web,    map: [975, 270], url: "", tags: [Biophysics, Data fitting],
       desc: "Fit biolayer interferometry sensorgrams (kon, koff, KD)." }
+  - { id: plate,  name: "Plate planner", stage: 3, kind: web,    map: [1030, 330], url: "/tools/plate-planner/", tags: [Assay, Calculator, Biophysics],
+      desc: "Dilution series, buffer recipes and 96-well BLI plate layouts, with the volume for every solution and well." }
   - { id: ic50,   name: "IC50 fit",    stage: 3, kind: web,    map: [1080, 262], url: "", tags: [Assay, Data fitting],
       desc: "Dose-response curve fitting and IC50 estimation." }
 
@@ -82,6 +84,6 @@ workflows:
   - { name: "Synthesis planning",      sub: "Accessibility, retrosynthesis, sourcing, scale-up",     tools: [sa, retro, buy, rxn] }
   - { name: "Structure first",         sub: "Inspect, predict, dock",                                tools: [pdb, boltz, sbvs] }
   - { name: "Protein design",           sub: "Generate a binder, predict the complex, inspect",       tools: [rfd4, boltz, pdb] }
-  - { name: "Validation",              sub: "Binding, IC50, SAR",                                    tools: [bli, ic50, lib] }
+  - { name: "Validation",              sub: "Binding, IC50, SAR",                                    tools: [plate, bli, ic50, lib] }
   - { name: "X-ray crystallography",   sub: "Crystallize, process, phase, refine, validate",         tools: [xtal, proc, phase, refine, valid] }
   - { name: "Cryo-EM",                 sub: "Preprocess, pick, classify, refine, view map",          tools: [prep, pick, cls, ref3, emap] }
