@@ -905,3 +905,14 @@ input.pp-in[type="date"]{font-family:inherit}
 .lf-cap{margin:2px 0 0;text-align:center;font-size:.9rem;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.lf-flow,.lf-dot{display:none}}
 .rs-plat .pv-bg{height:320px}
+
+/* BLI fit tool */
+.bli-drop { border-style: dashed; border-color: #DAD6CB; background: #FDFCF8; transition: background .15s, border-color .15s; }
+.bli-drop.over { background: #FFF6E0; border-color: var(--orange); }
+.bli-tag { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 999px; background: #FFF6E0; color: #8A5E0A; font-size: .7rem; font-weight: 600; letter-spacing: .02em; vertical-align: 1px; }
+.bli-off td { color: #a0a4ab; }
+.bli-kd { font-weight: 700; color: var(--ink); }
+.bli-flag { color: #8A5E0A; font-size: .8rem; }
+.bli-fig { width: 100%; overflow-x: auto; }
+.bli-fig svg { display: block; width: 100%; min-width: 640px; height: auto; font-family: inherit; }
+.pp-tbl input[type="checkbox"], .pp-tbl input[type="radio"] { accent-color: var(--orange); width: 16px; height: 16px; }

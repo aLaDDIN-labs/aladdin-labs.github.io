@@ -48,7 +48,7 @@ tools:
   - { id: rxn,    name: "Rxn calc",    stage: 2, kind: web,    map: [815, 335], url: "", tags: [Synthesis, Calculator],
       desc: "Reaction stoichiometry and scale-up calculator." }
 
-  - { id: bli,    name: "BLI fit",     stage: 3, kind: web,    map: [975, 270], url: "", tags: [Biophysics, Data fitting],
+  - { id: bli,    name: "BLI fit",     stage: 3, kind: web,    map: [975, 270], url: "/tools/bli-fit/", tags: [Biophysics, Data fitting],
       desc: "Fit biolayer interferometry sensorgrams (kon, koff, KD)." }
   - { id: plate,  name: "Plate planner", stage: 3, kind: web,    map: [1030, 330], url: "/tools/plate-planner/", tags: [Assay, Calculator, Biophysics],
       desc: "Dilution series, buffer recipes and 96-well BLI plate layouts, with the volume for every solution and well." }
