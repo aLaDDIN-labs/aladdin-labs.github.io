@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { analyze, figureSvg, kdRows, KD_HEAD, loadExperiment, toCsv } from "../lib/blitools";
+const Hd = ({ h }) => { const m = /^(.*?)(\s*\(.*\))$/.exec(h); return m ? <>{m[1]}<span className="bli-u">{m[2]}</span></> : h; };
 
 const dl = (href, name) => { const a = document.createElement("a"); a.href = href; a.download = name; document.body.appendChild(a); a.click(); a.remove(); };
 const blobUrl = (t, type) => URL.createObjectURL(new Blob([t], { type }));
@@ -34,12 +35,12 @@ export default function BliFit() {
       const data = await Promise.all(files.map(async (f) => ({ name: f.name, text: await f.text() })));
       const e = loadExperiment(data);
       setExp(e); setMode(e.info.mode);
-      setRows(e.info.sensors.map((s) => ({ name: s.name, include: s.include, reference: s.reference, compound: s.compound, conc: s.concs[0] ?? "" })));
+      setRows(e.info.sensors.map((s) => ({ name: s.name, include: s.include, reference: s.reference, compound: s.compound, conc: s.concs[0] ?? "", exp: s.exp })));
       setOpt((o) => ({ ...o, nPoints: Math.min(o.nPoints, Math.max(...e.info.sensors.map((s) => s.nAssoc), 2)) }));
     } catch (x) { setErr(String(x.message || x)); }
   };
   const upd = (name, patch) => setRows((rs) => rs.map((r) => (r.name === name ? { ...r, ...patch } : r)));
-  const setRef = (name) => setRows((rs) => rs.map((r) => ({ ...r, reference: r.name === name, include: r.name === name ? true : r.include })));
+  const setRef = (name) => setRows((rs) => { const e = rs.find((r) => r.name === name)?.exp; return rs.map((r) => (r.exp === e ? { ...r, reference: r.name === name, include: r.name === name ? true : r.include } : r)); });
 
   const maxPts = exp ? Math.max(...exp.info.sensors.filter((s) => s.nAssoc).map((s) => s.nAssoc)) : 8;
   const run = async () => {
@@ -104,9 +105,9 @@ export default function BliFit() {
           ["Excluded sensors", s.excluded.join(", ") || "none"], ["Files", Object.values(exp.raw).map((p) => p.file).join(", ")],
         ] },
         { t: "table", title: "Kinetic and steady-state constants", head: KD_HEAD, rows: out.table, fontSize: 7.5, widths: [22, 16, 30, 20, 20, 18, 20, 26, 16, 16, 12, 0] },
-        { t: "p", text: "Model: 1:1 Langmuir, kon, koff and Rmax shared per compound; KD = koff/kon. The 95% fit CI reflects fit noise only and ignores systematic deviations, so it is optimistic. KD SS is a Langmuir fit of the end-of-association responses with the bulk offset removed." },
+        { t: "p", text: "Model: 1:1 Langmuir; KD = koff/kon. For one sensor the 95% fit CI reflects fit noise only and ignores systematic deviations, so it is optimistic. Repeats are fitted separately and given as mean ± SD (n = sensors). KD SS is a Langmuir fit of the end-of-association responses with the bulk offset removed." },
       ];
-      out.results.forEach((r, i) => { blocks.push({ t: "h", text: `${r.compound} (sensor ${r.sensors})` }); blocks.push({ t: "svg", svg: out.svgs[i] }); if (r.flags) blocks.push({ t: "p", text: "Flags: " + r.flags }); });
+      out.results.forEach((r, i) => { blocks.push({ t: "h", text: `${r.compound} (${r.nRep > 1 ? "sensors" : "sensor"} ${r.sensors})` }); blocks.push({ t: "svg", svg: out.svgs[i] }); if (r.flags) blocks.push({ t: "p", text: "Flags: " + r.flags }); });
       await buildLabNote({ blocks, meta: { ...note, tool: "BLI fit", title: note.title.trim() || `BLI kinetics · ${meta.expName || "Octet run"}` }, orientation: "landscape", filename: `labnote_${note.date || "date"}_bli.pdf` });
     } catch (e) { console.error(e); setNoteErr("Could not make the PDF: " + (e?.message || e)); }
     setNoteBusy(false);
@@ -178,18 +179,18 @@ export default function BliFit() {
               <section className="pv-card pp-out">
                 <p className="pv-lbl">Sensors and compound IDs</p>
                 <div className="sq-scroll"><table className="sq-table pp-tbl"><thead><tr>
-                  <th>Use</th><th>Reference</th><th>Sensor</th><th>Loading (nm)</th><th>Compound ID</th><th>{isSingle ? "Concentrations" : "Conc. (µM)"}</th></tr></thead><tbody>
+                  <th>Use</th><th>Reference</th><th>Sensor</th><th>Loading (nm)</th><th>Compound ID</th><th>{isSingle ? "Concentrations" : <Hd h="Conc. (µM)" />}</th></tr></thead><tbody>
                   {exp.info.sensors.map((s) => { const r = rows.find((x) => x.name === s.name) || {}; return (
                     <tr key={s.name} className={r.include ? "" : "bli-off"}>
                       <td><input type="checkbox" checked={!!r.include} disabled={r.reference} onChange={(e) => upd(s.name, { include: e.target.checked })} aria-label={`use ${s.name}`} /></td>
                       <td><input type="radio" name="bli-ref" checked={!!r.reference} onChange={() => setRef(s.name)} aria-label={`reference ${s.name}`} /></td>
-                      <td><b>{s.name}</b>{s.lowLoad && <span className="bli-tag">low loading</span>}{s.isBuffer && <span className="bli-tag">buffer only</span>}</td>
+                      <td><b>{s.name}</b>{exp.info.nExp > 1 && <span className="bli-tag">run {s.expNo}</span>}{s.lowLoad && <span className="bli-tag">low loading</span>}{s.isBuffer && <span className="bli-tag">buffer only</span>}</td>
                       <td>{s.load == null ? "–" : s.load.toFixed(3)}</td>
                       <td><input className="pp-in" type="text" value={r.compound ?? ""} style={{ width: 150 }} onChange={(e) => upd(s.name, { compound: e.target.value })} aria-label={`compound ID of ${s.name}`} /></td>
                       <td>{isSingle ? <span className="pv-small">{s.nAssoc ? s.concs.slice(0, 8).map(fmtC).join(", ") : "–"}</span> : <Num v={r.conc} set={(v) => upd(s.name, { conc: v })} w={90} min={0} />}</td>
                     </tr>); })}
                 </tbody></table></div>
-                <p className="pv-small">Sensors with the same compound ID are fitted together. The compound ID is read from the sample ID in the file and can be edited. Sensors that loaded poorly or saw only buffer are switched off by default.</p>
+                <p className="pv-small">Sensors with the same compound ID are treated as repeats of one compound. In single cycle each sensor is fitted on its own and the table gives the mean ± SD (n = number of sensors). With one concentration per sensor they are fitted together. When several runs are loaded, each run is subtracted with its own reference sensor. The compound ID is read from the sample ID in the file and can be edited. Sensors that loaded poorly or saw only buffer are switched off by default.</p>
               </section>
             </div>
           )}
@@ -201,10 +202,10 @@ export default function BliFit() {
                   <button className="pv-chip pv-go" onClick={() => setNoteOpen(true)}>Lab note PDF</button>
                   <button className="pv-chip" onClick={() => dl(blobUrl("﻿" + toCsv(out.table), "text/csv"), "bli_kd_table.csv")}>Download CSV</button>
                 </div></div>
-              <div className="sq-scroll"><table className="sq-table pp-tbl"><thead><tr>{KD_HEAD.map((h) => <th key={h}>{h}</th>)}</tr></thead><tbody>
+              <div className="sq-scroll"><table className="sq-table pp-tbl"><thead><tr>{KD_HEAD.map((h) => <th key={h}><Hd h={h} /></th>)}</tr></thead><tbody>
                 {out.table.map((r, i) => <tr key={i}>{r.map((c, j) => <td key={j} className={j === 5 ? "bli-kd" : j === 11 ? "bli-flag" : ""} style={j === 11 ? { whiteSpace: "normal", minWidth: 170 } : undefined}>{c}</td>)}</tr>)}
               </tbody></table></div>
-              <p className="pv-small">1:1 model with kon, koff and Rmax shared per compound; KD = koff/kon. The 95% fit CI reflects fit noise only, so it is optimistic. KD SS is a Langmuir fit of the end-of-association responses with the bulk offset removed. Check the curves before you use a number.</p>
+              <p className="pv-small">1:1 model; KD = koff/kon. A compound measured on one sensor gets a 95% fit CI, which reflects fit noise only and is optimistic. Repeats (several sensors with the same compound ID in single cycle) are fitted separately and shown as mean ± SD, and the steady-state plot shows the mean ± SD of the end-of-association response at each concentration. KD SS is a Langmuir fit of all end-of-association responses with the bulk offset removed. Check the curves before you use a number.</p>
               <p className="pv-small">{out.settings.mode === "single" ? `Single cycle, first ${out.settings.nPoints} concentrations` : "One concentration per sensor"} · reference {out.settings.reference} · bulk offset {out.settings.bulk ? "on" : "off"} · excluded: {out.settings.excluded.join(", ") || "none"}</p>
             </section>
             <section className="pv-card pp-cfg bli-export">
@@ -230,7 +231,7 @@ export default function BliFit() {
             </section>
             {out.results.map((r, i) => (
               <section className="pv-card" key={r.compound + i}>
-                <div className="pv-head"><p className="pv-lbl">{r.compound} · sensor {r.sensors}</p>
+                <div className="pv-head"><p className="pv-lbl">{r.compound} · {r.nRep > 1 ? `${r.nRep} repeats · ` : ""}sensor {r.sensors}</p>
                   <div className="pv-row"><button className="pv-chip pv-go" disabled={!figOk || figBusy} onClick={() => exportFigs([r])}>Export {fig.fmt.toUpperCase()} · {fig.wmm} mm</button></div></div>
                 <div className="bli-fig" dangerouslySetInnerHTML={{ __html: out.svgs[i] }} />
                 {r.flags && <p className="me-flag warn">{r.flags}</p>}

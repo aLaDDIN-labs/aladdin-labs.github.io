@@ -916,3 +916,5 @@ input.pp-in[type="date"]{font-family:inherit}
 .bli-fig { width: 100%; overflow-x: auto; }
 .bli-fig svg { display: block; width: 100%; min-width: 640px; height: auto; font-family: inherit; }
 .pp-tbl input[type="checkbox"], .pp-tbl input[type="radio"] { accent-color: var(--orange); width: 16px; height: 16px; }
+
+.sq-table th .bli-u{text-transform:none;letter-spacing:0}
